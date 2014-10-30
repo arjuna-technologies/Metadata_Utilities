@@ -24,6 +24,7 @@
             <groupId>com.arjuna.dbutils</groupId>
             <artifactId>generator-jdbc</artifactId>
             <version>1.0.0p1m1</version>
+            <type>ejb</type>
         </dependency>
     </dependencies>
 
@@ -36,12 +37,11 @@
                 <artifactId>maven-ear-plugin</artifactId>
                 <configuration>
                     <modules>
-                        <jarModule>
+                        <ejbModule>
                             <groupId>com.arjuna.dbutils</groupId>
                             <artifactId>generator-jdbc</artifactId>
-                            <bundleFileName>generator-jdbc</bundleFileName>
-                            <includeInApplicationXml>true</includeInApplicationXml>
-                        </jarModule>
+                            <bundleFileName>generator-jdbc.jar</bundleFileName>
+                        </ejbModule>
                     </modules>
                 </configuration>
             </plugin>

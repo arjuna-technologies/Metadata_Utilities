@@ -6,8 +6,9 @@
 
 <jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.1">
     <ear-subdeployments-isolated>false</ear-subdeployments-isolated>
-    <sub-deployment name="metadata-utils.jar">
+    <sub-deployment name="generator-jdbc.jar">
         <dependencies>
+            <module name="org.postgresql" slot="main"/>
             <module name="deployment.databroker.ear.metadata-common.jar"/>
             <module name="deployment.databroker.ear.metadata-rdf.jar"/>
         </dependencies>

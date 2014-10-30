@@ -15,11 +15,22 @@
 
     <artifactId>generator-jdbc</artifactId>
 
-    <packaging>jar</packaging>
+    <packaging>ejb</packaging>
 
     <name>Metadata Generator JDBC</name>
 
     <dependencies>
+        <dependency>
+            <groupId>org.jboss.spec.javax.ejb</groupId>
+            <artifactId>jboss-ejb-api_${ejb-api.version}_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${version.org.postgresql}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>com.arjuna.databroker</groupId>
             <artifactId>metadata-common</artifactId>
