@@ -9,15 +9,15 @@
 
     <parent>
         <groupId>com.arjuna.dbutils</groupId>
-        <artifactId>metadata-utils</artifactId>
+        <artifactId>metadata-utils-parent</artifactId>
         <version>1.0.0p1m1</version>
     </parent>
 
-    <artifactId>generator-jdbc</artifactId>
+    <artifactId>metadata-utils-jdbc-generator</artifactId>
 
     <packaging>ejb</packaging>
 
-    <name>Metadata Generator JDBC</name>
+    <name>Metadata Utilities JDBC Generator</name>
 
     <dependencies>
         <dependency>

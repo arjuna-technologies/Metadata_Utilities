@@ -9,7 +9,7 @@
 
     <parent>
         <groupId>com.arjuna.dbutils</groupId>
-        <artifactId>metadata-utils</artifactId>
+        <artifactId>metadata-utils-parent</artifactId>
         <version>1.0.0p1m1</version>
     </parent>
 
@@ -22,7 +22,13 @@
     <dependencies>
         <dependency>
             <groupId>com.arjuna.dbutils</groupId>
-            <artifactId>generator-jdbc</artifactId>
+            <artifactId>metadata-utils-jdbc</artifactId>
+            <version>1.0.0p1m1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.arjuna.dbutils</groupId>
+            <artifactId>metadata-utils-jdbc-generator</artifactId>
             <version>1.0.0p1m1</version>
             <type>ejb</type>
         </dependency>
@@ -37,10 +43,15 @@
                 <artifactId>maven-ear-plugin</artifactId>
                 <configuration>
                     <modules>
+                        <jarModule>
+                            <groupId>com.arjuna.dbutils</groupId>
+                            <artifactId>metadata-utils-jdbc</artifactId>
+                            <includeInApplicationXml>true</includeInApplicationXml>
+                        </jarModule>
                         <ejbModule>
                             <groupId>com.arjuna.dbutils</groupId>
-                            <artifactId>generator-jdbc</artifactId>
-                            <bundleFileName>generator-jdbc.jar</bundleFileName>
+                            <artifactId>metadata-utils-jdbc-generator</artifactId>
+                            <bundleFileName>metadata-utils-jdbc-generator.jar</bundleFileName>
                         </ejbModule>
                     </modules>
                 </configuration>
