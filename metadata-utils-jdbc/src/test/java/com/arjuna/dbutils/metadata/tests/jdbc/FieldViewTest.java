@@ -67,7 +67,6 @@ public class FieldViewTest
 
         TableView tableViewValue = tableViewsValue.get(3);
         assertNotNull("Not expecting null TableView value", tableViewValue);
-        assertEquals("Unexpecting value for TableView.name", "dbwp_users", tableViewValue.getName());
 
         List<FieldView> fieldViewsValue = tableViewValue.getFields();
         assertNotNull("Not expecting null FieldView list value", fieldViewsValue);
