@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:pg="http://rdfs.arjuna.com/jdbc/postgresql#" xmlns:d="http://rdfs.arjuna.com/description#">
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#b69d71c9-c5b1-4f83-9449-9d83e7fd6871">
+        <d:hasTitle>id</d:hasTitle>
+        <pg:hasFieldName>id</pg:hasFieldName>
+        <pg:hasFieldType>varchar</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#c9da72e2-d48c-4955-ad7b-8ceda44a19b6">
+        <d:hasTitle>canchangeaccess</d:hasTitle>
+        <pg:hasFieldName>canchangeaccess</pg:hasFieldName>
+        <pg:hasFieldType>bool</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#3aee2323-17d7-4d28-a247-19a7ccc59917">
+        <d:hasTitle>cancreatechild</d:hasTitle>
+        <pg:hasFieldName>cancreatechild</pg:hasFieldName>
+        <pg:hasFieldType>bool</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#20c35fe9-fe30-49b8-88a9-236f7ca76cdc">
+        <d:hasTitle>canlist</d:hasTitle>
+        <pg:hasFieldName>canlist</pg:hasFieldName>
+        <pg:hasFieldType>bool</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#c5066f07-5552-4641-ab69-2834a8430f6d">
+        <d:hasTitle>canread</d:hasTitle>
+        <pg:hasFieldName>canread</pg:hasFieldName>
+        <pg:hasFieldType>bool</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#d702d3b8-88f0-4e3f-bb77-8f8f2b704860">
+        <d:hasTitle>canremove</d:hasTitle>
+        <pg:hasFieldName>canremove</pg:hasFieldName>
+        <pg:hasFieldType>bool</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#4c2ef732-5cbe-4901-ab93-4090d0ae2973">
+        <d:hasTitle>canupdate</d:hasTitle>
+        <pg:hasFieldName>canupdate</pg:hasFieldName>
+        <pg:hasFieldType>bool</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#1debbb01-530c-444c-a131-29a8db644040">
+        <d:hasTitle>requesterid</d:hasTitle>
+        <pg:hasFieldName>requesterid</pg:hasFieldName>
+        <pg:hasFieldType>varchar</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#0a6f6c8e-5cb4-486b-bba5-fd321e93fe6d">
+        <d:hasTitle>userid</d:hasTitle>
+        <pg:hasFieldName>userid</pg:hasFieldName>
+        <pg:hasFieldType>varchar</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#db454f33-05a1-41c8-89f5-b7d0d75835f3">
+        <d:hasTitle>metadata</d:hasTitle>
+        <pg:hasFieldName>metadata</pg:hasFieldName>
+        <pg:hasFieldType>varchar</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Table rdf:about="http://rdf.example.org/PS_Test#2fbcd7b8-f2d7-4894-b1c4-e2a5e70e9bfa">
+        <d:hasTitle>accesscontrolentity</d:hasTitle>
+        <pg:hasTableName>accesscontrolentity</pg:hasTableName>
+        <pg:hasTableField>
+            <rdf:Seq>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#b69d71c9-c5b1-4f83-9449-9d83e7fd6871"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#c9da72e2-d48c-4955-ad7b-8ceda44a19b6"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#3aee2323-17d7-4d28-a247-19a7ccc59917"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#20c35fe9-fe30-49b8-88a9-236f7ca76cdc"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#c5066f07-5552-4641-ab69-2834a8430f6d"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#d702d3b8-88f0-4e3f-bb77-8f8f2b704860"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#4c2ef732-5cbe-4901-ab93-4090d0ae2973"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#1debbb01-530c-444c-a131-29a8db644040"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#0a6f6c8e-5cb4-486b-bba5-fd321e93fe6d"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#db454f33-05a1-41c8-89f5-b7d0d75835f3"/>
+            </rdf:Seq>
+        </pg:hasTableField>
+    </pg:Table>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#58d4655b-24a7-4dbb-8511-0c652dc29a8a">
+        <d:hasTitle>id</d:hasTitle>
+        <pg:hasFieldName>id</pg:hasFieldName>
+        <pg:hasFieldType>varchar</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#f58ebed1-dc82-4776-9be9-623d11d30d7c">
+        <d:hasTitle>name</d:hasTitle>
+        <pg:hasFieldName>name</pg:hasFieldName>
+        <pg:hasFieldType>varchar</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#aaa042cf-7715-4a00-b90e-74cd408766fd">
+        <d:hasTitle>requesterid</d:hasTitle>
+        <pg:hasFieldName>requesterid</pg:hasFieldName>
+        <pg:hasFieldType>varchar</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#1a92559c-7adc-42ce-9bcd-d7a27d044226">
+        <d:hasTitle>servicerooturl</d:hasTitle>
+        <pg:hasFieldName>servicerooturl</pg:hasFieldName>
+        <pg:hasFieldType>varchar</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#26c9777d-c921-411f-bf9e-53063e98dd23">
+        <d:hasTitle>summary</d:hasTitle>
+        <pg:hasFieldName>summary</pg:hasFieldName>
+        <pg:hasFieldType>varchar</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Table rdf:about="http://rdf.example.org/PS_Test#d6a8225d-753d-405f-b9f3-f5e201b83579">
+        <d:hasTitle>databrokerentity</d:hasTitle>
+        <pg:hasTableName>databrokerentity</pg:hasTableName>
+        <pg:hasTableField>
+            <rdf:Seq>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#58d4655b-24a7-4dbb-8511-0c652dc29a8a"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#f58ebed1-dc82-4776-9be9-623d11d30d7c"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#aaa042cf-7715-4a00-b90e-74cd408766fd"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#1a92559c-7adc-42ce-9bcd-d7a27d044226"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#26c9777d-c921-411f-bf9e-53063e98dd23"/>
+            </rdf:Seq>
+        </pg:hasTableField>
+    </pg:Table>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#e12e9cb8-96be-4980-9ee8-7e4fcf22fcce">
+        <d:hasTitle>id</d:hasTitle>
+        <pg:hasFieldName>id</pg:hasFieldName>
+        <pg:hasFieldType>varchar</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#b29bb0cf-c735-45e7-b22f-35c72250f8db">
+        <d:hasTitle>rolegroup</d:hasTitle>
+        <pg:hasFieldName>rolegroup</pg:hasFieldName>
+        <pg:hasFieldType>varchar</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#e0190dbc-a82b-4e30-a9e6-43d51d16bc96">
+        <d:hasTitle>rolename</d:hasTitle>
+        <pg:hasFieldName>rolename</pg:hasFieldName>
+        <pg:hasFieldType>varchar</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#45b567bf-6f92-4d24-b038-c2a0891080a7">
+        <d:hasTitle>username</d:hasTitle>
+        <pg:hasFieldName>username</pg:hasFieldName>
+        <pg:hasFieldType>varchar</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Table rdf:about="http://rdf.example.org/PS_Test#0243138e-d618-4fcd-a435-ba810ea08b1b">
+        <d:hasTitle>dbwp_roles</d:hasTitle>
+        <pg:hasTableName>dbwp_roles</pg:hasTableName>
+        <pg:hasTableField>
+            <rdf:Seq>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#e12e9cb8-96be-4980-9ee8-7e4fcf22fcce"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#b29bb0cf-c735-45e7-b22f-35c72250f8db"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#e0190dbc-a82b-4e30-a9e6-43d51d16bc96"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#45b567bf-6f92-4d24-b038-c2a0891080a7"/>
+            </rdf:Seq>
+        </pg:hasTableField>
+    </pg:Table>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#26bfc331-894b-43d7-88b5-e885546eb273">
+        <d:hasTitle>username</d:hasTitle>
+        <pg:hasFieldName>username</pg:hasFieldName>
+        <pg:hasFieldType>varchar</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#bbe3eddd-cfc7-435b-afb3-9cc5f5ee18ec">
+        <d:hasTitle>password</d:hasTitle>
+        <pg:hasFieldName>password</pg:hasFieldName>
+        <pg:hasFieldType>varchar</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Table rdf:about="http://rdf.example.org/PS_Test#9626ede3-16e3-4de3-83df-727bfd0c7f27">
+        <d:hasTitle>dbwp_users</d:hasTitle>
+        <pg:hasTableName>dbwp_users</pg:hasTableName>
+        <pg:hasTableField>
+            <rdf:Seq>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#26bfc331-894b-43d7-88b5-e885546eb273"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#bbe3eddd-cfc7-435b-afb3-9cc5f5ee18ec"/>
+            </rdf:Seq>
+        </pg:hasTableField>
+    </pg:Table>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#4d3b11c7-7755-453a-8e18-97b4e284ac94">
+        <d:hasTitle>id</d:hasTitle>
+        <pg:hasFieldName>id</pg:hasFieldName>
+        <pg:hasFieldType>varchar</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#41c1678a-1e0f-4772-b99d-c78a13543ee0">
+        <d:hasTitle>content</d:hasTitle>
+        <pg:hasFieldName>content</pg:hasFieldName>
+        <pg:hasFieldType>text</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#52199cf1-c551-4c5f-848c-3b81f6d8f043">
+        <d:hasTitle>description</d:hasTitle>
+        <pg:hasFieldName>description</pg:hasFieldName>
+        <pg:hasFieldType>bytea</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Field rdf:about="http://rdf.example.org/PS_Test#b3d1e6d8-2144-4ce6-a1a2-125369e6f6d0">
+        <d:hasTitle>parent</d:hasTitle>
+        <pg:hasFieldName>parent</pg:hasFieldName>
+        <pg:hasFieldType>bytea</pg:hasFieldType>
+    </pg:Field>
+
+    <pg:Table rdf:about="http://rdf.example.org/PS_Test#ba64e26a-4b88-419c-9adb-2aefa0c0fde5">
+        <d:hasTitle>metadataentity</d:hasTitle>
+        <pg:hasTableName>metadataentity</pg:hasTableName>
+        <pg:hasTableField>
+            <rdf:Seq>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#4d3b11c7-7755-453a-8e18-97b4e284ac94"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#41c1678a-1e0f-4772-b99d-c78a13543ee0"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#52199cf1-c551-4c5f-848c-3b81f6d8f043"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#b3d1e6d8-2144-4ce6-a1a2-125369e6f6d0"/>
+            </rdf:Seq>
+        </pg:hasTableField>
+    </pg:Table>
+
+    <pg:Database rdf:about="http://rdf.example.org/PS_Test#databroker">
+        <d:hasTitle>databroker</d:hasTitle>
+        <pg:hasDatabaseType>PostgreSQL</pg:hasDatabaseType>
+        <pg:hasDatabaseHostName>localhost</pg:hasDatabaseHostName>
+        <pg:hasDatabasePortNumber>0</pg:hasDatabasePortNumber>
+        <pg:hasDatabaseUserName>test_user</pg:hasDatabaseUserName>
+        <pg:hasDatabasePassword>test_password</pg:hasDatabasePassword>
+        <pg:hasDatabaseName>databroker</pg:hasDatabaseName>
+        <pg:hasDatabaseTable>
+            <rdf:Seq>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#2fbcd7b8-f2d7-4894-b1c4-e2a5e70e9bfa"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#d6a8225d-753d-405f-b9f3-f5e201b83579"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#0243138e-d618-4fcd-a435-ba810ea08b1b"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#9626ede3-16e3-4de3-83df-727bfd0c7f27"/>
+                <rdf:li rdf:resource="http://rdf.example.org/PS_Test#ba64e26a-4b88-419c-9adb-2aefa0c0fde5"/>
+            </rdf:Seq>
+       </pg:hasDatabaseTable>
+    </pg:Database>
+</rdf:RDF>

@@ -32,6 +32,18 @@
             <version>1.0.0p1m1</version>
             <type>ejb</type>
         </dependency>
+        <dependency>
+            <groupId>com.arjuna.dbutils</groupId>
+            <artifactId>metadata-utils-xssf</artifactId>
+            <version>1.0.0p1m1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.arjuna.dbutils</groupId>
+            <artifactId>metadata-utils-xssf-generator</artifactId>
+            <version>1.0.0p1m1</version>
+            <type>ejb</type>
+        </dependency>
     </dependencies>
 
     <build>
@@ -48,10 +60,20 @@
                             <artifactId>metadata-utils-jdbc</artifactId>
                             <includeInApplicationXml>true</includeInApplicationXml>
                         </jarModule>
+                        <jarModule>
+                            <groupId>com.arjuna.dbutils</groupId>
+                            <artifactId>metadata-utils-xssf</artifactId>
+                            <includeInApplicationXml>true</includeInApplicationXml>
+                        </jarModule>
                         <ejbModule>
                             <groupId>com.arjuna.dbutils</groupId>
                             <artifactId>metadata-utils-jdbc-generator</artifactId>
                             <bundleFileName>metadata-utils-jdbc-generator.jar</bundleFileName>
+                        </ejbModule>
+                        <ejbModule>
+                            <groupId>com.arjuna.dbutils</groupId>
+                            <artifactId>metadata-utils-xssf-generator</artifactId>
+                            <bundleFileName>metadata-utils-xssf-generator.jar</bundleFileName>
                         </ejbModule>
                     </modules>
                 </configuration>

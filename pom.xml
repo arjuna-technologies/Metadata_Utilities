@@ -18,6 +18,7 @@
     <properties>
         <version.com.arjuna.databroker>1.0.0p1m2l</version.com.arjuna.databroker>
         <version.org.postgresql>9.2-1004-jdbc4</version.org.postgresql>
+        <version.org.apache.poi>3.10.1</version.org.apache.poi>
 
         <jboss-as.username>username</jboss-as.username>
         <jboss-as.password>password</jboss-as.password>
@@ -49,6 +50,8 @@
     <modules>
         <module>metadata-utils-jdbc</module> 
         <module>metadata-utils-jdbc-generator</module> 
+        <module>metadata-utils-xssf</module> 
+        <module>metadata-utils-xssf-generator</module> 
         <module>metadata-utils-ear</module> 
     </modules>
 
