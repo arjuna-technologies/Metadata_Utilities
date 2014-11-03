@@ -70,35 +70,35 @@ public class TableViewTest
         assertEquals("Unexpecting value for TableView[0].name", "accesscontrolentity", tableView0Value.getName());
         List<FieldView> fieldViews0Value = tableView0Value.getFields();
         assertNotNull("Not expecting null FieldView list 0 value", fieldViews0Value);
-        assertEquals("Unexpecting length of TableView list 0 value", 10, fieldViews0Value.size());
+        assertEquals("Unexpecting length of FieldView list 0 value", 10, fieldViews0Value.size());
 
         TableView tableView1Value = tableViewsValue.get(1);
         assertNotNull("Not expecting null TableView[1] value", tableView1Value);
         assertEquals("Unexpecting value for TableView[1].name", "databrokerentity", tableView1Value.getName());
         List<FieldView> fieldViews1Value = tableView1Value.getFields();
         assertNotNull("Not expecting null FieldView list 1 value", fieldViews1Value);
-        assertEquals("Unexpecting length of TableView list 1 value", 5, fieldViews1Value.size());
+        assertEquals("Unexpecting length of FieldView list 1 value", 5, fieldViews1Value.size());
 
         TableView tableView2Value = tableViewsValue.get(2);
         assertNotNull("Not expecting null TableView[2] value", tableView2Value);
         assertEquals("Unexpecting value for TableView[2].name", "dbwp_roles", tableView2Value.getName());
         List<FieldView> fieldViews2Value = tableView2Value.getFields();
         assertNotNull("Not expecting null FieldView list 2 value", fieldViews2Value);
-        assertEquals("Unexpecting length of TableView list 2 value", 4, fieldViews2Value.size());
+        assertEquals("Unexpecting length of FieldView list 2 value", 4, fieldViews2Value.size());
 
         TableView tableView3Value = tableViewsValue.get(3);
         assertNotNull("Not expecting null TableView[3] value", tableView3Value);
         assertEquals("Unexpecting value for TableView[3].name", "dbwp_users", tableView3Value.getName());
         List<FieldView> fieldViews3Value = tableView3Value.getFields();
         assertNotNull("Not expecting null FieldView list 3 value", fieldViews3Value);
-        assertEquals("Unexpecting length of TableView list 3 value", 2, fieldViews3Value.size());
+        assertEquals("Unexpecting length of FieldView list 3 value", 2, fieldViews3Value.size());
 
         TableView tableView4Value = tableViewsValue.get(4);
         assertNotNull("Not expecting null TableView[4] value", tableView4Value);
         assertEquals("Unexpecting value for TableView[4].name", "metadataentity", tableView4Value.getName());
         List<FieldView> fieldViews4Value = tableView4Value.getFields();
         assertNotNull("Not expecting null FieldView list 4 value", fieldViews4Value);
-        assertEquals("Unexpecting length of TableView list 4 value", 4, fieldViews4Value.size());
+        assertEquals("Unexpecting length of FieldView list 4 value", 4, fieldViews4Value.size());
     }
 
     private static MetadataContent _metadataContent;
