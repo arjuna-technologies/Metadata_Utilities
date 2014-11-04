@@ -19,7 +19,7 @@ import com.arjuna.databroker.metadata.MetadataContent;
 import com.arjuna.databroker.metadata.MetadataInventory;
 import com.arjuna.databroker.metadata.rdf.StoreMetadataInventory;
 import com.arjuna.databroker.metadata.rdf.selectors.RDFMetadataContentsSelector;
-import com.arjuna.dbutils.metadata.xssf.SpreadSheetView;
+import com.arjuna.dbutils.metadata.xssf.SpreadsheetView;
 import com.arjuna.dbutils.metadata.xssf.ColumnView;
 import com.arjuna.dbutils.metadata.xssf.SheetView;
 
@@ -45,7 +45,7 @@ public class ColumnViewTest
             MetadataInventory         metadataInventory         = new StoreMetadataInventory(dummyMetadataContentStore);
             Metadata                  metadata                  = metadataInventory.metadata("exampleXSSF01").getMetadata();
 
-            _metadataContent = metadata.contents().selector(RDFMetadataContentsSelector.class).withPath("http://rdf.example.org/PS_Test#databroker").getMetadataContent();
+            _metadataContent = metadata.contents().selector(RDFMetadataContentsSelector.class).withPath("http://rdf.example.org/XSSF_Test#TimeSheet").getMetadataContent();
         }
         catch (Throwable throwable)
         {
@@ -54,16 +54,16 @@ public class ColumnViewTest
     }
 
     @Test
-    public void tableView()
+    public void columnView()
     {
         assertNotNull("Not expecting null Metadata Content object", _metadataContent);
 
-        SpreadSheetView spreadSheetView = _metadataContent.getView(SpreadSheetView.class);
-        assertNotNull("Not expecting null SpreadSheet View object", spreadSheetView);
+        SpreadsheetView spreadsheetView = _metadataContent.getView(SpreadsheetView.class);
+        assertNotNull("Not expecting null Spreadsheet View object", spreadsheetView);
 
-        List<SheetView> sheetViewsValue = spreadSheetView.getSheets();
+        List<SheetView> sheetViewsValue = spreadsheetView.getSheets();
         assertNotNull("Not expecting null SheetView list value", sheetViewsValue);
-        assertEquals("Unexpecting length of SheetView list value", 2, sheetViewsValue.size());
+        assertEquals("Unexpecting length of SheetView list value", 1, sheetViewsValue.size());
 
         SheetView sheetViewValue = sheetViewsValue.get(0);
         assertNotNull("Not expecting null SheetView[0] value", sheetViewValue);
@@ -74,11 +74,13 @@ public class ColumnViewTest
 
         ColumnView columnView0Value = columnViewsValue.get(0);
         assertNotNull("Not expecting null ColumnView 0 value", columnView0Value);
-        assertEquals("Unexpecting value for ColumnView[0].name", "username", columnView0Value.getName());
+        assertEquals("Unexpecting value for ColumnView[0].name", "task", columnView0Value.getName());
+        assertEquals("Unexpecting value for ColumnView[0].number", "0", columnView0Value.getNumber());
 
         ColumnView columnView1Value = columnViewsValue.get(1);
         assertNotNull("Not expecting null ColumnView 1 value", columnView1Value);
-        assertEquals("Unexpecting value for ColumnView[1].name", "password", columnView1Value.getName());
+        assertEquals("Unexpecting value for ColumnView[1].name", "time", columnView1Value.getName());
+        assertEquals("Unexpecting value for ColumnView[1].number", "1", columnView1Value.getNumber());
     }
 
     private static MetadataContent _metadataContent;

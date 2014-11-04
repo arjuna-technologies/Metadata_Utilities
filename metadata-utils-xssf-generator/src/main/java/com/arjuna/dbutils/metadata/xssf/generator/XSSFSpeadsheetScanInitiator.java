@@ -15,9 +15,9 @@ import javax.ejb.Startup;
 
 @Startup
 @Singleton
-public class XSSFSpeadSheetScanInitiator
+public class XSSFSpeadsheetScanInitiator
 {
-    private static final Logger logger = Logger.getLogger(XSSFSpeadSheetScanInitiator.class.getName());
+    private static final Logger logger = Logger.getLogger(XSSFSpeadsheetScanInitiator.class.getName());
 
     @PostConstruct
     public void setup()
@@ -29,5 +29,5 @@ public class XSSFSpeadSheetScanInitiator
     }
 
     @EJB
-    private XSSFSpeadSheetMetadataScan _jdbcDatabaseMetadataScan;
+    private XSSFSpeadsheetMetadataScan _jdbcDatabaseMetadataScan;
 }

@@ -10,9 +10,9 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 
 @Stateless
-public class XSSFSpeadSheetMetadataScan
+public class XSSFSpeadsheetMetadataScan
 {
-    private static final Logger logger = Logger.getLogger(XSSFSpeadSheetMetadataScan.class.getName());
+    private static final Logger logger = Logger.getLogger(XSSFSpeadsheetMetadataScan.class.getName());
 
     public void scanXSSFSpeadSheet(URI baseRDFURI, String databaseServerName, Integer databaseServerPort, String databaseName, String username, String password)
     {
