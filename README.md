@@ -1,7 +1,11 @@
 Metadata_Utilities
 ==================
 
-Metadata Utilities
+Metadata Utilities:
+- JDBC Metadata Views
+- PostgreSQL JDBC Metadata Generation
+- Spreadsheet Metadata Views
+- XSSF Spreadsheet Metadata Generation
 
 Licence
 -------
