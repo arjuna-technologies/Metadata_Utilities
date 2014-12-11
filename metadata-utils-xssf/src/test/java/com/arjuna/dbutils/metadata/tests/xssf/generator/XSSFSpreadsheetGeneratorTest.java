@@ -21,7 +21,7 @@ public class XSSFSpreadsheetGeneratorTest
 
             String rdf = xssfSpeadsheetMetadataGenerator.generateXSSFSpeadsheetMetadata(spreadsheetFile);
 
-            assertNull("Unexpected RDF", rdf);
+            assertNotNull("Unexpected non null RDF", rdf);
         }
         catch (Throwable throwable)
         {

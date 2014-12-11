@@ -23,7 +23,7 @@ public class DatabaseGenerateTest
 
             String rdf = jdbcDatabaseMetadataGenerator.generateDatabaseToRDF(URI.create("http://rdf.companieshouse.gov.uk/business_data"), "localhost", 5432, "databroker", "username", "password");
 
-            assertNull("Unexpected RDF", rdf);
+            assertNotNull("Unexpected non null RDF", rdf);
         }
         catch (Throwable throwable)
         {
