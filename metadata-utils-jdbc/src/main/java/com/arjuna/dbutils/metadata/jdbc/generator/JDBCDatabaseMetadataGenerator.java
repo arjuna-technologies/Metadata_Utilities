@@ -15,9 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.postgresql.ds.PGSimpleDataSource;
 
-public class JDBCDatabaseMetadataScan
+public class JDBCDatabaseMetadataGenerator
 {
-    private static final Logger logger = Logger.getLogger(JDBCDatabaseMetadataScan.class.getName());
+    private static final Logger logger = Logger.getLogger(JDBCDatabaseMetadataGenerator.class.getName());
 
     public String generateDatabaseToRDF(URI baseRDFURI, String databaseServerName, Integer databaseServerPort, String databaseName, String username, String password)
     {

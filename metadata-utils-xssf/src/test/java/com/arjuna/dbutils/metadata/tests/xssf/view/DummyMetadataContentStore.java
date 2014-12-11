@@ -2,7 +2,7 @@
  * Copyright (c) 2014, Arjuna Technologies Limited, Newcastle-upon-Tyne, England. All rights reserved.
  */
 
-package com.arjuna.dbutils.metadata.tests.xssf;
+package com.arjuna.dbutils.metadata.tests.xssf.view;
 
 import java.util.List;
 import java.util.Map;

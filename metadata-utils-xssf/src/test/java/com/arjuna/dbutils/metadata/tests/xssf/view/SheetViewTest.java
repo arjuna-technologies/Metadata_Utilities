@@ -2,7 +2,7 @@
  * Copyright (c) 2014, Arjuna Technologies Limited, Newcastle-upon-Tyne, England. All rights reserved.
  */
 
-package com.arjuna.dbutils.metadata.tests.xssf;
+package com.arjuna.dbutils.metadata.tests.xssf.view;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -23,7 +23,7 @@ import com.arjuna.dbutils.metadata.xssf.view.ColumnView;
 import com.arjuna.dbutils.metadata.xssf.view.SheetView;
 import com.arjuna.dbutils.metadata.xssf.view.SpreadsheetView;
 
-public class ColumnViewTest
+public class SheetViewTest
 {
     @BeforeClass
     public static void setupInventory()
@@ -54,7 +54,7 @@ public class ColumnViewTest
     }
 
     @Test
-    public void columnView()
+    public void sheetView()
     {
         assertNotNull("Not expecting null Metadata Content object", _metadataContent);
 
@@ -65,22 +65,12 @@ public class ColumnViewTest
         assertNotNull("Not expecting null SheetView list value", sheetViewsValue);
         assertEquals("Unexpecting length of SheetView list value", 1, sheetViewsValue.size());
 
-        SheetView sheetViewValue = sheetViewsValue.get(0);
-        assertNotNull("Not expecting null SheetView[0] value", sheetViewValue);
-
-        List<ColumnView> columnViewsValue = sheetViewValue.getColumns();
-        assertNotNull("Not expecting null ColumnView list value", columnViewsValue);
-        assertEquals("Unexpecting length of ColumnView list value", 2, columnViewsValue.size());
-
-        ColumnView columnView0Value = columnViewsValue.get(0);
-        assertNotNull("Not expecting null ColumnView 0 value", columnView0Value);
-        assertEquals("Unexpecting value for ColumnView[0].name", "task", columnView0Value.getName());
-        assertEquals("Unexpecting value for ColumnView[0].number", "0", columnView0Value.getNumber());
-
-        ColumnView columnView1Value = columnViewsValue.get(1);
-        assertNotNull("Not expecting null ColumnView 1 value", columnView1Value);
-        assertEquals("Unexpecting value for ColumnView[1].name", "time", columnView1Value.getName());
-        assertEquals("Unexpecting value for ColumnView[1].number", "1", columnView1Value.getNumber());
+        SheetView sheetView0Value = sheetViewsValue.get(0);
+        assertNotNull("Not expecting null SheetView[0] value", sheetView0Value);
+        assertEquals("Unexpecting value for SheetView[0].name", "January", sheetView0Value.getName());
+        List<ColumnView> columnViews0Value = sheetView0Value.getColumns();
+        assertNotNull("Not expecting null ColumnView list 0 value", columnViews0Value);
+        assertEquals("Unexpecting length of ColumnView list 0 value", 2, columnViews0Value.size());
     }
 
     private static MetadataContent _metadataContent;

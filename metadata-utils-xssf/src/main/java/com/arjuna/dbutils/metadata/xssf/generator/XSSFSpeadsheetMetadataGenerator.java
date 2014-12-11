@@ -4,15 +4,15 @@
 
 package com.arjuna.dbutils.metadata.xssf.generator;
 
-import java.net.URI;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class XSSFSpeadsheetMetadataScan
+public class XSSFSpeadsheetMetadataGenerator
 {
-    private static final Logger logger = Logger.getLogger(XSSFSpeadsheetMetadataScan.class.getName());
+    private static final Logger logger = Logger.getLogger(XSSFSpeadsheetMetadataGenerator.class.getName());
 
-    public String generateXSSFSpeadsheetMetadata(URI baseRDFURI)
+    public String generateXSSFSpeadsheetMetadata(File spreadsheetFile)
     {
         logger.log(Level.FINE, "Generate XSSF Speadsheet Metadata");
 
