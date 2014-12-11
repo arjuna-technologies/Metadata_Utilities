@@ -8,16 +8,19 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
+
 import com.arjuna.databroker.metadata.Metadata;
 import com.arjuna.databroker.metadata.MetadataContent;
 import com.arjuna.databroker.metadata.MetadataInventory;
 import com.arjuna.databroker.metadata.rdf.StoreMetadataInventory;
 import com.arjuna.databroker.metadata.rdf.selectors.RDFMetadataContentsSelector;
-import com.arjuna.dbutils.metadata.xssf.SpreadsheetView;
-import com.arjuna.dbutils.metadata.xssf.SheetView;
+import com.arjuna.dbutils.metadata.xssf.view.SheetView;
+import com.arjuna.dbutils.metadata.xssf.view.SpreadsheetView;
 
 public class SpreadsheetViewTest
 {

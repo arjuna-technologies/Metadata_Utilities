@@ -13,19 +13,15 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.ejb.Stateless;
-
 import org.postgresql.ds.PGSimpleDataSource;
 
-@Stateless
 public class JDBCDatabaseMetadataScan
 {
     private static final Logger logger = Logger.getLogger(JDBCDatabaseMetadataScan.class.getName());
 
-    public void scanDataBase(URI baseRDFURI, String databaseServerName, Integer databaseServerPort, String databaseName, String username, String password)
+    public String generateDatabaseToRDF(URI baseRDFURI, String databaseServerName, Integer databaseServerPort, String databaseName, String username, String password)
     {
-        logger.log(Level.FINE, "PostgreSQL JDBC Database Metadata Scan");
+        logger.log(Level.FINE, "Generate PostgreSQL JDBC Database Metadata");
 
         Connection connection = null;
         try
@@ -39,8 +35,9 @@ public class JDBCDatabaseMetadataScan
 
             connection = dataSource.getConnection();
 
-            boolean      firstItem = true;
-            StringBuffer rdfText   = new StringBuffer();
+            StringBuffer rdfText = new StringBuffer();
+
+            boolean firstItem = true;
             rdfText.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n");
             rdfText.append("<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:rdfs=\"http://www.w3.org/2000/01/rdf-schema#\" xmlns:pg=\"http://rdfs.arjuna.com/jdbc/postgresql#\" xmlns:d=\"http://rdfs.arjuna.com/description#\">\n");
 
@@ -166,12 +163,15 @@ public class JDBCDatabaseMetadataScan
             }
             rdfText.append("            </rdf:Seq>\n       </pg:hasDatabaseTable>\n");
             rdfText.append("    </pg:Database>\n");
-            
+
             rdfText.append("</rdf:RDF>\n");
 
             connection.close();
 
-            logger.log(Level.FINE, "RDF:\n[\n" + rdfText.toString() + "]");
+            if (logger.isLoggable(Level.FINE))
+                logger.log(Level.FINE, "DataBase RDF:\n[\n" + rdfText.toString() + "]");
+
+            return rdfText.toString();
         }
         catch (Throwable throwable)
         {
@@ -186,6 +186,8 @@ public class JDBCDatabaseMetadataScan
             {
                 logger.log(Level.WARNING, "Problem Generating during JDBC Database Metadata Scan, close", sqlThrowable);
             }
+
+            return null;
         }
     }
 }

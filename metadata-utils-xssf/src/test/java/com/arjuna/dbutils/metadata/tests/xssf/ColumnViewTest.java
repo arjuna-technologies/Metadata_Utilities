@@ -19,9 +19,9 @@ import com.arjuna.databroker.metadata.MetadataContent;
 import com.arjuna.databroker.metadata.MetadataInventory;
 import com.arjuna.databroker.metadata.rdf.StoreMetadataInventory;
 import com.arjuna.databroker.metadata.rdf.selectors.RDFMetadataContentsSelector;
-import com.arjuna.dbutils.metadata.xssf.SpreadsheetView;
-import com.arjuna.dbutils.metadata.xssf.ColumnView;
-import com.arjuna.dbutils.metadata.xssf.SheetView;
+import com.arjuna.dbutils.metadata.xssf.view.ColumnView;
+import com.arjuna.dbutils.metadata.xssf.view.SheetView;
+import com.arjuna.dbutils.metadata.xssf.view.SpreadsheetView;
 
 public class ColumnViewTest
 {

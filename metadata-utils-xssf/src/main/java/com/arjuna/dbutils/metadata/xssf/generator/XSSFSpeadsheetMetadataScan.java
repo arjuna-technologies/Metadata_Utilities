@@ -7,16 +7,14 @@ package com.arjuna.dbutils.metadata.xssf.generator;
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.Stateless;
 
-@Stateless
 public class XSSFSpeadsheetMetadataScan
 {
     private static final Logger logger = Logger.getLogger(XSSFSpeadsheetMetadataScan.class.getName());
 
-    public void scanXSSFSpeadSheet(URI baseRDFURI, String databaseServerName, Integer databaseServerPort, String databaseName, String username, String password)
+    public String generateXSSFSpeadsheetMetadata(URI baseRDFURI)
     {
-        logger.log(Level.FINE, "XSSF Spead Sheet Metadata Scan");
+        logger.log(Level.FINE, "Generate XSSF Speadsheet Metadata");
 
         try
         {
@@ -26,11 +24,16 @@ public class XSSFSpeadsheetMetadataScan
 
             rdfText.append("</rdf:RDF>\n");
 
-            logger.log(Level.FINE, "RDF:\n[\n" + rdfText.toString() + "]");
+            if (logger.isLoggable(Level.FINE))
+                logger.log(Level.FINE, "XSSF Speadsheet RDF:\n[\n" + rdfText.toString() + "]");
+
+            return rdfText.toString();
         }
         catch (Throwable throwable)
         {
-            logger.log(Level.WARNING, "Problem Generating during XSSF Spead Sheet Metadata Scan", throwable);
+            logger.log(Level.WARNING, "Problem Generating during XSSF Speadsheet Metadata Scan", throwable);
+            
+            return null;
         }
     }
 }

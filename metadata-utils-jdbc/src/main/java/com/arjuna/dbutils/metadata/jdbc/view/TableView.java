@@ -2,7 +2,7 @@
  * Copyright (c) 2014, Arjuna Technologies Limited, Newcastle-upon-Tyne, England. All rights reserved.
  */
 
-package com.arjuna.dbutils.metadata.jdbc;
+package com.arjuna.dbutils.metadata.jdbc.view;
 
 import java.util.List;
 import com.arjuna.databroker.metadata.annotations.MetadataView;

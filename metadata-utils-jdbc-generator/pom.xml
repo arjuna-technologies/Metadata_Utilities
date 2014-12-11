@@ -15,7 +15,7 @@
 
     <artifactId>metadata-utils-jdbc-generator</artifactId>
 
-    <packaging>ejb</packaging>
+    <packaging>jar</packaging>
 
     <name>Metadata Utilities JDBC Generator</name>
 

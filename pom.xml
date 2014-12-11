@@ -7,7 +7,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.arjuna.dbutils</groupId>
+    <groupId>com.arjuna.dbutils.metadata</groupId>
     <artifactId>metadata-utils-parent</artifactId>
     <version>1.0.0p1m1</version>
 
@@ -19,18 +19,6 @@
         <version.com.arjuna.databroker>1.0.0p1m2l</version.com.arjuna.databroker>
         <version.org.postgresql>9.2-1004-jdbc4</version.org.postgresql>
         <version.org.apache.poi>3.10.1</version.org.apache.poi>
-
-        <jboss-as.username>username</jboss-as.username>
-        <jboss-as.password>password</jboss-as.password>
-        <jboss-as.hostname>databroker</jboss-as.hostname>
-        <jboss-as.domain>standalone-full</jboss-as.domain>
-
-        <wildfly.username>username</wildfly.username>
-        <wildfly.password>password</wildfly.password>
-        <wildfly.hostname>databroker</wildfly.hostname>
-        <wildfly.domain>standalone</wildfly.domain>
-
-        <deployments.dir>deployments</deployments.dir>
 
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
@@ -49,10 +37,7 @@
 
     <modules>
         <module>metadata-utils-jdbc</module> 
-        <module>metadata-utils-jdbc-generator</module> 
         <module>metadata-utils-xssf</module> 
-        <module>metadata-utils-xssf-generator</module> 
-        <module>metadata-utils-ear</module> 
     </modules>
 
     <repositories>
@@ -97,36 +82,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.5</version>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-ejb-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <ejbVersion>${ejb-api.version}</ejbVersion>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-ear-plugin</artifactId>
-                <version>2.9</version>
-                <configuration>
-                    <version>${jee.version}</version>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.jboss.as.plugins</groupId>
-                <artifactId>jboss-as-maven-plugin</artifactId>
-                <version>7.6.Final</version>
-            </plugin>
-
-            <plugin>
-                <groupId>org.wildfly.plugins</groupId>
-                <artifactId>wildfly-maven-plugin</artifactId>
-                <version>1.0.2.Final</version>
             </plugin>
         </plugins>
     </build>

@@ -2,7 +2,7 @@
  * Copyright (c) 2014, Arjuna Technologies Limited, Newcastle-upon-Tyne, England. All rights reserved.
  */
 
-package com.arjuna.dbutils.metadata.tests.jdbc;
+package com.arjuna.dbutils.metadata.tests.jdbc.view;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,8 +19,8 @@ import com.arjuna.databroker.metadata.MetadataContent;
 import com.arjuna.databroker.metadata.MetadataInventory;
 import com.arjuna.databroker.metadata.rdf.StoreMetadataInventory;
 import com.arjuna.databroker.metadata.rdf.selectors.RDFMetadataContentsSelector;
-import com.arjuna.dbutils.metadata.jdbc.DatabaseView;
-import com.arjuna.dbutils.metadata.jdbc.TableView;
+import com.arjuna.dbutils.metadata.jdbc.view.DatabaseView;
+import com.arjuna.dbutils.metadata.jdbc.view.TableView;
 
 public class DatabaseViewTest
 {
