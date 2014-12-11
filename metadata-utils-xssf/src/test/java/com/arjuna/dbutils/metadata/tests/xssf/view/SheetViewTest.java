@@ -21,7 +21,7 @@ import com.arjuna.databroker.metadata.rdf.StoreMetadataInventory;
 import com.arjuna.databroker.metadata.rdf.selectors.RDFMetadataContentsSelector;
 import com.arjuna.dbutils.metadata.xssf.view.ColumnView;
 import com.arjuna.dbutils.metadata.xssf.view.SheetView;
-import com.arjuna.dbutils.metadata.xssf.view.SpreadsheetView;
+import com.arjuna.dbutils.metadata.xssf.view.WorkbookView;
 
 public class SheetViewTest
 {
@@ -58,7 +58,7 @@ public class SheetViewTest
     {
         assertNotNull("Not expecting null Metadata Content object", _metadataContent);
 
-        SpreadsheetView spreadsheetView = _metadataContent.getView(SpreadsheetView.class);
+        WorkbookView spreadsheetView = _metadataContent.getView(WorkbookView.class);
         assertNotNull("Not expecting null Spreadsheet View object", spreadsheetView);
 
         List<SheetView> sheetViewsValue = spreadsheetView.getSheets();

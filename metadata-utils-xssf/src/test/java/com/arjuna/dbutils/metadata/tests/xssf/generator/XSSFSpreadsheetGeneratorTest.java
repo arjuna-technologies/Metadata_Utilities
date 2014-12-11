@@ -5,8 +5,11 @@
 package com.arjuna.dbutils.metadata.tests.xssf.generator;
 
 import java.io.File;
+
 import org.junit.Test;
+
 import com.arjuna.dbutils.metadata.xssf.generator.XSSFSpeadsheetMetadataGenerator;
+
 import static org.junit.Assert.*;
 
 public class XSSFSpreadsheetGeneratorTest
@@ -22,6 +25,7 @@ public class XSSFSpreadsheetGeneratorTest
             String rdf = xssfSpeadsheetMetadataGenerator.generateXSSFSpeadsheetMetadata(spreadsheetFile);
 
             assertNotNull("Unexpected non null RDF", rdf);
+            System.out.println(rdf);
         }
         catch (Throwable throwable)
         {

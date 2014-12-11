@@ -24,13 +24,13 @@
         </x:hasColumn>
     </x:Sheet>
 
-    <x:Spreadsheet rdf:about="http://rdf.example.org/XSSF_Test#TimeSheet">
+    <x:Workbook rdf:about="http://rdf.example.org/XSSF_Test#TimeSheet">
         <d:hasTitle>TimeSheet</d:hasTitle>
-        <x:hasSpreadsheetName>TimeSheet</x:hasSpreadsheetName>
+        <x:hasWorkbookName>TimeSheet</x:hasWorkbookName>
         <x:hasSheet>
             <rdf:Seq>
                 <rdf:li rdf:resource="http://rdf.example.org/XSSF_Test#2fbcd7b8-f2d7-4894-b1c4-e2a5e70e9bfa"/>
             </rdf:Seq>
        </x:hasSheet>
-    </x:Spreadsheet>
+    </x:Workbook>
 </rdf:RDF>

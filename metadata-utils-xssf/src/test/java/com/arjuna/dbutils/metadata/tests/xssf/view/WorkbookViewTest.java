@@ -20,9 +20,9 @@ import com.arjuna.databroker.metadata.MetadataInventory;
 import com.arjuna.databroker.metadata.rdf.StoreMetadataInventory;
 import com.arjuna.databroker.metadata.rdf.selectors.RDFMetadataContentsSelector;
 import com.arjuna.dbutils.metadata.xssf.view.SheetView;
-import com.arjuna.dbutils.metadata.xssf.view.SpreadsheetView;
+import com.arjuna.dbutils.metadata.xssf.view.WorkbookView;
 
-public class SpreadsheetViewTest
+public class WorkbookViewTest
 {
     @BeforeClass
     public static void setupInventory()
@@ -35,7 +35,7 @@ public class SpreadsheetViewTest
             Map<String, String>       parentIdMap      = new HashMap<String, String>();
             Map<String, List<String>> childrenIdsMap   = new HashMap<String, List<String>>();
 
-            String exampleXSSF01 = Utils.loadInputStream(SpreadsheetViewTest.class.getResourceAsStream("ExampleXSSF01.rdf"));
+            String exampleXSSF01 = Utils.loadInputStream(WorkbookViewTest.class.getResourceAsStream("ExampleXSSF01.rdf"));
 
             ids.add("exampleXSSF01");
             contentMap.put("exampleXSSF01", exampleXSSF01);
@@ -57,13 +57,13 @@ public class SpreadsheetViewTest
     {
         assertNotNull("Not expecting null Metadata Content object", _metadataContent);
 
-        SpreadsheetView spreadsheetView = _metadataContent.getView(SpreadsheetView.class);
-        assertNotNull("Not expecting null Spreadsheet View object", spreadsheetView);
+        WorkbookView workbookView = _metadataContent.getView(WorkbookView.class);
+        assertNotNull("Not expecting null Workbook View object", workbookView);
 
-        String nameValue = spreadsheetView.getName();
+        String nameValue = workbookView.getName();
         assertEquals("Unexpecting name value", "TimeSheet", nameValue);
 
-        List<SheetView> sheetViewsValue = spreadsheetView.getSheets();
+        List<SheetView> sheetViewsValue = workbookView.getSheets();
         assertNotNull("Not expecting null SheetView list value", sheetViewsValue);
         assertEquals("Unexpecting length of SheetView list value", 1, sheetViewsValue.size());
     }
