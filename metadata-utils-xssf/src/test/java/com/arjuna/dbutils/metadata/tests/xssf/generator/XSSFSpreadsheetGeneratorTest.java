@@ -26,7 +26,6 @@ public class XSSFSpreadsheetGeneratorTest
             String rdf = xssfSpeadsheetMetadataGenerator.generateXSSFSpeadsheetMetadata(URI.create("http://rdf.data.org/example_xssf"), spreadsheetFile);
 
             assertNotNull("Unexpected non null RDF", rdf);
-            System.out.println(rdf);
         }
         catch (Throwable throwable)
         {
