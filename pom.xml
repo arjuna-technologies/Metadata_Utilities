@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--                                                                                                     -->
-<!-- Copyright (c) 2014, Arjuna Technologies Limited, Newcastle-upon-Tyne, England. All rights reserved. -->
+<!-- Copyright (c) 2014-2015, Arjuna Technologies Limited, Newcastle-upon-Tyne, England. All rights reserved. -->
 <!--                                                                                                     -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -16,7 +16,7 @@
     <name>Metadata Utilities</name>
 
     <properties>
-        <version.com.arjuna.databroker>1.0.0p1m2l</version.com.arjuna.databroker>
+        <version.com.arjuna.databroker>1.0.0p1m3l</version.com.arjuna.databroker>
         <version.org.postgresql>9.2-1004-jdbc4</version.org.postgresql>
         <version.org.apache.poi>3.10.1</version.org.apache.poi>
 
