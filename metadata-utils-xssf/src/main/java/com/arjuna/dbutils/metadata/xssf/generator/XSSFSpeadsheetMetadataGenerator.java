@@ -75,7 +75,7 @@ public class XSSFSpeadsheetMetadataGenerator
         catch (Throwable throwable)
         {
             logger.log(Level.WARNING, "Problem Generating during XSSF Speadsheet Metadata Scan", throwable);
-            
+
             return null;
         }
     }
@@ -138,7 +138,7 @@ public class XSSFSpeadsheetMetadataGenerator
             	else if (valueCell.getCellType() == XSSFCell.CELL_TYPE_BOOLEAN)
             		columnType =  "Boolean";
             }
-            
+
             if (firstItem)
             	firstItem = false;
             else
