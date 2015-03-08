@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFComment;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -25,13 +24,13 @@ public class XSSFSpeadsheetMetadataGenerator
 {
     private static final Logger logger = Logger.getLogger(XSSFSpeadsheetMetadataGenerator.class.getName());
 
-    public String generateXSSFSpeadsheetMetadata(URI baseRDFURI, String spreadsheetData)
+    public String generateXSSFSpeadsheetMetadata(URI baseRDFURI, byte[] spreadsheetData)
     {
         logger.log(Level.FINE, "Generate XSSF Speadsheet Metadata (Data)");
 
         try
         {
-            InputStream xssfWorkbookInputStream = new ByteArrayInputStream(spreadsheetData.getBytes());
+            InputStream xssfWorkbookInputStream = new ByteArrayInputStream(spreadsheetData);
             String      metadata                = generateXSSFSpeadsheetMetadata(baseRDFURI, xssfWorkbookInputStream);
             xssfWorkbookInputStream.close();
 
@@ -39,7 +38,7 @@ public class XSSFSpeadsheetMetadataGenerator
         }
         catch (Throwable throwable)
         {
-            logger.log(Level.WARNING, "Problem Generating during XSSF Speadsheet Metadata Scan (File)", throwable);
+            logger.log(Level.WARNING, "Problem Generating during XSSF Speadsheet Metadata Scan (Data)", throwable);
 
             return null;
         }
