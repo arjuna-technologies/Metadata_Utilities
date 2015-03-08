@@ -4,8 +4,10 @@
 
 package com.arjuna.dbutils.metadata.xssf.generator;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,14 +25,53 @@ public class XSSFSpeadsheetMetadataGenerator
 {
     private static final Logger logger = Logger.getLogger(XSSFSpeadsheetMetadataGenerator.class.getName());
 
+    public String generateXSSFSpeadsheetMetadata(URI baseRDFURI, String spreadsheetData)
+    {
+        logger.log(Level.FINE, "Generate XSSF Speadsheet Metadata (Data)");
+
+        try
+        {
+            InputStream xssfWorkbookInputStream = new ByteArrayInputStream(spreadsheetData.getBytes());
+            String      metadata                = generateXSSFSpeadsheetMetadata(baseRDFURI, xssfWorkbookInputStream);
+            xssfWorkbookInputStream.close();
+
+            return metadata;
+        }
+        catch (Throwable throwable)
+        {
+            logger.log(Level.WARNING, "Problem Generating during XSSF Speadsheet Metadata Scan (File)", throwable);
+
+            return null;
+        }
+    }
+
     public String generateXSSFSpeadsheetMetadata(URI baseRDFURI, File spreadsheetFile)
+    {
+        logger.log(Level.FINE, "Generate XSSF Speadsheet Metadata (File)");
+
+        try
+        {
+            InputStream xssfWorkbookInputStream = new FileInputStream(spreadsheetFile);
+            String      metadata                = generateXSSFSpeadsheetMetadata(baseRDFURI, xssfWorkbookInputStream);
+            xssfWorkbookInputStream.close();
+
+            return metadata;
+        }
+        catch (Throwable throwable)
+        {
+            logger.log(Level.WARNING, "Problem Generating during XSSF Speadsheet Metadata Scan (File)", throwable);
+
+            return null;
+        }
+    }
+
+    private String generateXSSFSpeadsheetMetadata(URI baseRDFURI, InputStream xssfWorkbookInputStream)
     {
         logger.log(Level.FINE, "Generate XSSF Speadsheet Metadata");
 
         try
         {
-            FileInputStream xssfWorkbookInputStream = new FileInputStream(spreadsheetFile);
-            XSSFWorkbook    xssfWorkbook            = new XSSFWorkbook(xssfWorkbookInputStream);
+            XSSFWorkbook xssfWorkbook = new XSSFWorkbook(xssfWorkbookInputStream);
 
             StringBuffer rdfText = new StringBuffer();
             rdfText.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n");
@@ -64,8 +105,6 @@ public class XSSFSpeadsheetMetadataGenerator
             rdfText.append("    </x:Workbook>\n");
 
             rdfText.append("</rdf:RDF>\n");
-
-            xssfWorkbookInputStream.close();
 
             if (logger.isLoggable(Level.FINE))
                 logger.log(Level.FINE, "XSSF Speadsheet RDF:\n[\n" + rdfText.toString() + "]");
