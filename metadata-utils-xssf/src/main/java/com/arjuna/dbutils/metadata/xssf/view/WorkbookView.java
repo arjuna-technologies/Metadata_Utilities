@@ -12,9 +12,9 @@ import com.arjuna.databroker.metadata.annotations.GetMetadataMapping;
 @MetadataView
 public interface WorkbookView
 {
-	@GetMetadataMapping(name="http://rdfs.arjuna.com/xssf#hasWorkbookName", type="http://www.w3.org/2001/XMLSchema#string")
+    @GetMetadataMapping(name="http://rdfs.arjuna.com/xssf#hasWorkbookName", type="http://www.w3.org/2001/XMLSchema#string")
     public String getName();
 
-	@GetMetadataMapping(name="http://rdfs.arjuna.com/xssf#hasSheet", type="http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq")
+    @GetMetadataMapping(name="http://rdfs.arjuna.com/xssf#hasSheet", type="http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq")
     public List<SheetView> getSheets();
 }

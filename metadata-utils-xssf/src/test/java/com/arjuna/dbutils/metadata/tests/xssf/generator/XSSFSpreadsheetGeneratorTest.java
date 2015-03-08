@@ -20,8 +20,8 @@ public class XSSFSpreadsheetGeneratorTest
     {
         try
         {
-        	File spreadsheetFile = new File("Test01.xlsx");
-        	XSSFSpeadsheetMetadataGenerator xssfSpeadsheetMetadataGenerator = new XSSFSpeadsheetMetadataGenerator();
+            File spreadsheetFile = new File("Test01.xlsx");
+            XSSFSpeadsheetMetadataGenerator xssfSpeadsheetMetadataGenerator = new XSSFSpeadsheetMetadataGenerator();
 
             String rdf = xssfSpeadsheetMetadataGenerator.generateXSSFSpeadsheetMetadata(URI.create("http://rdf.data.org/example_xssf"), spreadsheetFile);
 

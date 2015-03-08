@@ -30,7 +30,7 @@ public class XSSFSpeadsheetMetadataGenerator
         try
         {
             FileInputStream xssfWorkbookInputStream = new FileInputStream(spreadsheetFile);
-        	XSSFWorkbook    xssfWorkbook            = new XSSFWorkbook(xssfWorkbookInputStream);
+            XSSFWorkbook    xssfWorkbook            = new XSSFWorkbook(xssfWorkbookInputStream);
 
             StringBuffer rdfText = new StringBuffer();
             rdfText.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n");
@@ -42,16 +42,16 @@ public class XSSFSpeadsheetMetadataGenerator
             for (int sheetIndex = 0; sheetIndex < xssfWorkbook.getNumberOfSheets(); sheetIndex++)
             {
                 String sheetId = generateXSSFSheetMetadata(rdfText, firstItem, baseRDFURI, xssfWorkbook.getSheetAt(sheetIndex));
-            	if (sheetId != null)
-            		sheetIds.add(sheetId);
-            	firstItem = firstItem && sheetIds.isEmpty();
+                if (sheetId != null)
+                    sheetIds.add(sheetId);
+                firstItem = firstItem && sheetIds.isEmpty();
             }
 
             String workbookId = UUID.randomUUID().toString();
             if (! firstItem)
                 rdfText.append('\n');
             else
-            	rdfText.append('\n');
+                rdfText.append('\n');
             rdfText.append("    <x:Workbook rdf:about=\"");
             rdfText.append(baseRDFURI.resolve('#' + workbookId));
             rdfText.append("\">\n");
@@ -87,10 +87,10 @@ public class XSSFSpeadsheetMetadataGenerator
         List<String> columnIds = new LinkedList<String>();
         for (int columnIndex = sheet.getLeftCol(); columnIndex < sheet.getPhysicalNumberOfRows() + sheet.getLeftCol(); columnIndex++)
         {
-        	String columnId = generateXSSFColumnMetadata(rdfText, firstItem, baseRDFURI, columnIndex, firstRow.getCell(columnIndex), sheet.getCellComment(0, columnIndex), secondRow.getCell(columnIndex));
-        	if (columnId != null)
-        		columnIds.add(columnId);
-        	firstItem = firstItem && columnIds.isEmpty();
+            String columnId = generateXSSFColumnMetadata(rdfText, firstItem, baseRDFURI, columnIndex, firstRow.getCell(columnIndex), sheet.getCellComment(0, columnIndex), secondRow.getCell(columnIndex));
+            if (columnId != null)
+                columnIds.add(columnId);
+            firstItem = firstItem && columnIds.isEmpty();
         }
 
         if (! firstItem)
@@ -120,27 +120,27 @@ public class XSSFSpeadsheetMetadataGenerator
 
     private String generateXSSFColumnMetadata(StringBuffer rdfText, boolean firstItem, URI baseRDFURI, int columnIndex, XSSFCell titleCell, XSSFComment summaryCell, XSSFCell valueCell)
     {
-    	if ((titleCell != null) && (titleCell.getCellType() == XSSFCell.CELL_TYPE_STRING))
-    	{
+        if ((titleCell != null) && (titleCell.getCellType() == XSSFCell.CELL_TYPE_STRING))
+        {
             String columnId      = UUID.randomUUID().toString();
             String columnLabel   = removeRowNumber(titleCell.getReference());
             String columnName    = titleCell.getStringCellValue();
             String columnComment = null;
             if (titleCell.getCellComment() != null)
-            	columnComment = titleCell.getCellComment().getString().getString();
+                columnComment = titleCell.getCellComment().getString().getString();
             String columnType = null;
             if (valueCell != null)
             {
-            	if (valueCell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC)
-            		columnType =  "Number";
-            	else if (valueCell.getCellType() == XSSFCell.CELL_TYPE_STRING)
-            		columnType =  "String";
-            	else if (valueCell.getCellType() == XSSFCell.CELL_TYPE_BOOLEAN)
-            		columnType =  "Boolean";
+                if (valueCell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC)
+                    columnType =  "Number";
+                else if (valueCell.getCellType() == XSSFCell.CELL_TYPE_STRING)
+                    columnType =  "String";
+                else if (valueCell.getCellType() == XSSFCell.CELL_TYPE_BOOLEAN)
+                    columnType =  "Boolean";
             }
 
             if (firstItem)
-            	firstItem = false;
+                firstItem = false;
             else
                 rdfText.append('\n');
 
@@ -174,9 +174,9 @@ public class XSSFSpeadsheetMetadataGenerator
             rdfText.append("    </x:Column>\n");
 
             return columnId;
-    	}
-    	else
-    		return null;
+        }
+        else
+            return null;
     }
 
     private String removeRowNumber(String cellName)
