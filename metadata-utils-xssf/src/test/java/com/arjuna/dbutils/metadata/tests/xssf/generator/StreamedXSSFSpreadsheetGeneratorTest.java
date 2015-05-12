@@ -6,16 +6,20 @@ package com.arjuna.dbutils.metadata.tests.xssf.generator;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+
 import org.junit.Test;
-import com.arjuna.dbutils.metadata.xssf.generator.StreamedXSSFSpeadsheetMetadataGenerator;
+
+import com.arjuna.dbutils.metadata.xssf.generator.StreamedXSSFSpreadsheetMetadataGenerator;
+
 import static org.junit.Assert.*;
 
 public class StreamedXSSFSpreadsheetGeneratorTest
 {
     @Test
-    public void generateXSSFSpeadsheetMetadataData()
+    public void generateXSSFSpreadsheetMetadataData()
     {
         try
         {
@@ -32,17 +36,15 @@ public class StreamedXSSFSpreadsheetGeneratorTest
             }
             spreadsheetInputStream.close();
 
-            StreamedXSSFSpeadsheetMetadataGenerator streamedXSSFSpeadsheetMetadataGenerator = new StreamedXSSFSpeadsheetMetadataGenerator();
+            StreamedXSSFSpreadsheetMetadataGenerator streamedXSSFSpeadsheetMetadataGenerator = new StreamedXSSFSpreadsheetMetadataGenerator();
 
-            String rdf = streamedXSSFSpeadsheetMetadataGenerator.generateXSSFSpeadsheetMetadata(URI.create("http://rdf.data.org/example_xssf"), spreadsheetData);
-
-            System.out.println("[\n" + rdf + "\n]");
+            String rdf = streamedXSSFSpeadsheetMetadataGenerator.generateXSSFSpreadsheetMetadata(URI.create("http://rdf.data.org/example_xssf"), spreadsheetData);
 
             assertNotNull("Unexpected non null RDF", rdf);
         }
-        catch (Throwable throwable)
+        catch (IOException ioException)
         {
-            fail("Failed to generate Metadata Inventory");
+            fail("Failed to generate Metadata");
         }
     }
 }

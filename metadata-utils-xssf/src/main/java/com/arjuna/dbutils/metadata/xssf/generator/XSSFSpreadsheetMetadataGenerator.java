@@ -20,9 +20,9 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class XSSFSpeadsheetMetadataGenerator
+public class XSSFSpreadsheetMetadataGenerator
 {
-    private static final Logger logger = Logger.getLogger(XSSFSpeadsheetMetadataGenerator.class.getName());
+    private static final Logger logger = Logger.getLogger(XSSFSpreadsheetMetadataGenerator.class.getName());
 
     public String generateXSSFSpeadsheetMetadata(URI baseRDFURI, byte[] spreadsheetData)
     {
@@ -105,8 +105,8 @@ public class XSSFSpeadsheetMetadataGenerator
 
             rdfText.append("</rdf:RDF>\n");
 
-            if (logger.isLoggable(Level.FINE))
-                logger.log(Level.FINE, "XSSF Speadsheet RDF:\n[\n" + rdfText.toString() + "]");
+            if (logger.isLoggable(Level.FINEST))
+                logger.log(Level.FINEST, "XSSF Speadsheet RDF:\n[\n" + rdfText.toString() + "]");
 
             return rdfText.toString();
         }
