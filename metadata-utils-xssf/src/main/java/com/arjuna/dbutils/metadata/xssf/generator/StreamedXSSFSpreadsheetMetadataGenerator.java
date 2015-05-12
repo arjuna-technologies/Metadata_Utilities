@@ -20,9 +20,7 @@ import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.apache.poi.xssf.model.SharedStringsTable;
 import org.apache.poi.xssf.model.StylesTable;
-import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFComment;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -36,13 +34,60 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
 {
     private static final Logger logger = Logger.getLogger(StreamedXSSFSpreadsheetMetadataGenerator.class.getName());
 
+    private class Column
+    {
+        public Column(URI aboutURI, String label, String index, String type, String title, String summary)
+        {
+            this.aboutURI = aboutURI;
+            this.label    = label;
+            this.index    = index;
+            this.type     = type;
+            this.title    = title;
+            this.summary  = summary;
+        }
+
+        public URI    aboutURI;
+        public String label;
+        public String index;
+        public String type;
+        public String title;
+        public String summary;
+    }
+
+    private class Sheet
+    {
+        public Sheet(URI aboutURI, String name, Map<String, Column> columns)
+        {
+            this.aboutURI = aboutURI;
+            this.name     = name;
+            this.columns  = columns;
+        }
+
+        public URI                 aboutURI;
+        public String              name;
+        public Map<String, Column> columns;
+    }
+
+    private class Workbook
+    {
+        public Workbook(URI aboutURI, Map<String, Sheet> sheets)
+        {
+            this.aboutURI = aboutURI;
+            this.sheets   = sheets;
+        }
+
+        public URI                aboutURI;
+        public Map<String, Sheet> sheets;
+    }
+
     public String generateXSSFSpreadsheetMetadata(URI baseRDFURI, byte[] spreadsheetData)
     {
         logger.log(Level.FINE, "Generate XSSF Spreadsheet Metadata - Streamed (Data)");
 
         try
         {
-            Map<String, String> refIdMap = new HashMap<String, String>();
+            UUID     workbookUUID = UUID.randomUUID();
+            Workbook workbook     = new Workbook(baseRDFURI.resolve('#' + workbookUUID.toString()), new HashMap<String, Sheet>());
 
             InputStream        xssfWorkbookInputStream = new ByteArrayInputStream(spreadsheetData);
             OPCPackage         opcPackage              = OPCPackage.open(xssfWorkbookInputStream);
@@ -50,11 +95,8 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
             SharedStringsTable sharedStringsTable      = xssfReader.getSharedStringsTable();
             StylesTable        stylesTable             = xssfReader.getStylesTable();
 
-            StringBuffer rdfText = new StringBuffer();
-            generateXSSFSpreadsheetMetadataStart(rdfText);
-
             XMLReader      workbookParser  = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
-            ContentHandler workbookHandler = new WorkbookHandler(rdfText, baseRDFURI, refIdMap);
+            ContentHandler workbookHandler = new WorkbookHandler(baseRDFURI, workbook);
             workbookParser.setContentHandler(workbookHandler);
 
             InputStream workbookInputStream = xssfReader.getWorkbookData();
@@ -63,7 +105,7 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
             workbookInputStream.close();
 
             XMLReader      sheetParser  = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
-            ContentHandler sheetHandler = new SheetHandler("Test", sharedStringsTable, stylesTable);
+            ContentHandler sheetHandler = new SheetHandler(sharedStringsTable, stylesTable);
             sheetParser.setContentHandler(sheetHandler);
 
             Iterator<InputStream> sheetInputStreamIterator = xssfReader.getSheetsData();
@@ -74,9 +116,10 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
                 sheetParser.parse(sheetSource);
                 sheetInputStream.close();
             }
-
-            generateXSSFSpreadsheetMetadataEnd(rdfText);
             xssfWorkbookInputStream.close();
+
+            StringBuffer rdfText = new StringBuffer();
+            generateXSSFWorkbookMetadata(rdfText, workbook);
 
             return rdfText.toString();
         }
@@ -87,141 +130,19 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
             return null;
         }
     }
-
-    private void generateXSSFSpreadsheetMetadataStart(StringBuffer rdfText)
-    {
-        logger.log(Level.FINE, "Generate XSSF Spreadsheet Metadata Start");
-
-        try
-        {
-            rdfText.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n");
-            rdfText.append("<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:rdfs=\"http://www.w3.org/2000/01/rdf-schema#\" xmlns:x=\"http://rdfs.arjuna.com/xssf#\" xmlns:d=\"http://rdfs.arjuna.com/description#\">\n");
-        }
-        catch (Throwable throwable)
-        {
-            logger.log(Level.WARNING, "Problem Generating during XSSF Spreadsheet Metadata Start", throwable);
-        }
-    }
-
-    private void generateXSSFSpreadsheetMetadataEnd(StringBuffer rdfText)
-    {
-        logger.log(Level.FINE, "Generate XSSF Spreadsheet Metadata End");
-
-        try
-        {
-            rdfText.append("</rdf:RDF>\n");
-        }
-        catch (Throwable throwable)
-        {
-            logger.log(Level.WARNING, "Problem Generating during XSSF Spreadsheet Metadata Scan", throwable);
-        }
-    }
-
-    private String generateXSSFSheetMetadata(StringBuffer rdfText, URI baseRDFURI, String sheetName)
-    {
-        String sheetId = UUID.randomUUID().toString();
-        rdfText.append("    <x:Sheet rdf:about=\"");
-        rdfText.append(baseRDFURI.resolve('#' + sheetId));
-        rdfText.append("\">\n");
-        if (sheetName != null)
-        {
-            rdfText.append("        <d:hasTitle>");
-            rdfText.append(sheetName);
-            rdfText.append("</d:hasTitle>\n");
-        }
-//        for (String columnId: columnIds)
-//        {
-//            rdfText.append("        <x:hasColumn rdf:resource=\"");
-//            rdfText.append(baseRDFURI.resolve('#' + columnId.toString()));
-//            rdfText.append("\"/>\n");
-//        }
-        rdfText.append("    </x:Sheet>\n");
-
-        return sheetId;
-    }
-
-    private String generateXSSFColumnMetadata(StringBuffer rdfText, boolean firstItem, URI baseRDFURI, int columnIndex, XSSFCell titleCell, XSSFComment summaryCell, XSSFCell valueCell)
-    {
-        if ((titleCell != null) && (titleCell.getCellType() == XSSFCell.CELL_TYPE_STRING))
-        {
-            String columnId      = UUID.randomUUID().toString();
-            String columnLabel   = removeRowNumber(titleCell.getReference());
-            String columnName    = titleCell.getStringCellValue();
-            String columnComment = null;
-            if (titleCell.getCellComment() != null)
-                columnComment = titleCell.getCellComment().getString().getString();
-            String columnType = null;
-            if (valueCell != null)
-            {
-                if (valueCell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC)
-                    columnType =  "Number";
-                else if (valueCell.getCellType() == XSSFCell.CELL_TYPE_STRING)
-                    columnType =  "String";
-                else if (valueCell.getCellType() == XSSFCell.CELL_TYPE_BOOLEAN)
-                    columnType =  "Boolean";
-            }
-
-            if (firstItem)
-                firstItem = false;
-            else
-                rdfText.append('\n');
-
-            rdfText.append("    <x:Column rdf:about=\"");
-            rdfText.append(baseRDFURI.resolve('#' + columnId));
-            rdfText.append("\">\n");
-            rdfText.append("        <x:hasLabel>");
-            rdfText.append(columnLabel);
-            rdfText.append("</x:hasLabel>\n");
-            rdfText.append("        <x:hasIndex>");
-            rdfText.append(columnIndex);
-            rdfText.append("</x:hasIndex>\n");
-            if (columnType != null)
-            {
-                rdfText.append("        <x:hasType>");
-                rdfText.append(columnType);
-                rdfText.append("</x:hasType>\n");
-            }
-            if (columnName != null)
-            {
-                rdfText.append("        <d:hasTitle>");
-                rdfText.append(columnName);
-                rdfText.append("</d:hasTitle>\n");
-            }
-            if (columnComment != null)
-            {
-                rdfText.append("        <d:hasSummary>");
-                rdfText.append(columnComment);
-                rdfText.append("</d:hasSummary>\n");
-            }
-            rdfText.append("    </x:Column>\n");
-
-            return columnId;
-        }
-        else
-            return null;
-    }
-
-    private String removeRowNumber(String cellName)
-    {
-        int index = 0;
-        while ((index < cellName.length()) && Character.isAlphabetic(cellName.charAt(index)))
-            index++;
-
-        return cellName.substring(0, index);
-    }
-
     private class WorkbookHandler extends DefaultHandler
     {
         private static final String SPREADSHEETML_NAMESPACE = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+        private static final String RELATIONSHIPS_NAMESPACE = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
         private static final String NONE_NAMESPACE          = "";
         private static final String SHEET_TAGNAME           = "sheet";
+        private static final String ID_ATTRNAME             = "id";
         private static final String NAME_ATTRNAME           = "name";
 
-        public WorkbookHandler(StringBuffer rdfText, URI baseRDFURI, Map<String, String> refIdMap)
+        public WorkbookHandler(URI baseRDFURI, Workbook workbook)
         {
-             _rdfText    = rdfText;
              _baseRDFURI = baseRDFURI;
-             _refIdMap   = refIdMap;
+             _workbook   = workbook;
         }
 
         @Override
@@ -230,21 +151,19 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
         {
             if ((localName != null) && localName.equals(SHEET_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
             {
-                String name = attributes.getValue(NONE_NAMESPACE, NAME_ATTRNAME);
+                UUID   uuid  = UUID.randomUUID();
+                String name  = attributes.getValue(NONE_NAMESPACE, NAME_ATTRNAME);
+                String refId = attributes.getValue(RELATIONSHIPS_NAMESPACE, ID_ATTRNAME);
 
-                generateXSSFSheetMetadata(_rdfText, _baseRDFURI, name);
+                Sheet sheet = new Sheet(_baseRDFURI.resolve('#' + uuid.toString()), name, new HashMap<String, Column>());
+
+                _workbook.sheets.put(refId, sheet);
             }
         }
 
-        private StringBuffer        _rdfText;
-        private URI                 _baseRDFURI;
-        private Map<String, String> _refIdMap;
+        private URI      _baseRDFURI;
+        private Workbook _workbook;
     }
-
-    private static final String[] KEYS = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
-                                           "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-                                           "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM",
-                                           "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU" };
 
     private class SheetHandler extends DefaultHandler
     {
@@ -258,9 +177,8 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
         private static final String TYPE_ATTRNAME           = "t";
         private static final String STYLE_ATTRNAME          = "s";
 
-        public SheetHandler(String tableName, SharedStringsTable sharedStringsTable, StylesTable stylesTable)
+        public SheetHandler(SharedStringsTable sharedStringsTable, StylesTable stylesTable)
         {
-            _tableName          = tableName;
             _sharedStringsTable = sharedStringsTable;
             _stylesTable        = stylesTable;
             _formatter          = new DataFormatter();
@@ -269,7 +187,6 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
             _cellStyle          = null;
             _value              = new StringBuffer();
             _rowMap             = new LinkedHashMap<String, String>();
-            _rowCount           = 0;
         }
 
         @Override
@@ -349,13 +266,7 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
                     _value.setLength(0);
                 }
                 else if ((localName != null) && localName.equals(ROW_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
-                {
-                    String sql = rowMap2SQL(_rowMap);
-                    if (logger.isLoggable(Level.FINE))
-                        logger.log(Level.FINE, "SQL: [" + sql + "]");
-
                     _rowMap.clear();
-                }
             }
             catch (Throwable throwable)
             {
@@ -377,35 +288,6 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
             }
         }
 
-        private String rowMap2SQL(Map<String, String> rowMap)
-        {
-            StringBuffer sql = new StringBuffer();
-
-            sql.append("INSERT INTO ");
-            sql.append(_tableName);
-            sql.append(" VALUES (");
-            boolean first = true;
-            for (String key: KEYS)
-            {
-                if (! first)
-                    sql.append(',');
-                else
-                    first = false;
-
-                String value = rowMap.get(key);
-
-                sql.append('\'');
-                if (value != null)
-                    sql.append(sqlEscape(value));
-                sql.append('\'');
-            }
-            sql.append(",'',");
-            sql.append(Long.toString(_rowCount));
-            sql.append(");");
-
-            return sql.toString();
-        }
-
         private String removeRowNumber(String cellName)
         {
             int index = 0;
@@ -415,13 +297,6 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
             return cellName.substring(0, index);
         }
 
-        private String sqlEscape(String sql)
-        {
-//            return sql.replaceAll("\\\\", "\\\\\\\\").replaceAll("'", "\\\\'");
-            return sql.replaceAll("\\\\", "\\\\\\\\").replaceAll("'", "");
-        }
-
-        private String              _tableName;
         private SharedStringsTable  _sharedStringsTable;
         private StylesTable         _stylesTable;
         private DataFormatter       _formatter;
@@ -430,6 +305,95 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
         private String              _cellStyle;
         private StringBuffer        _value;
         private Map<String, String> _rowMap;
-        private long                _rowCount;
+    }
+
+    private void generateXSSFWorkbookMetadata(StringBuffer rdfText, Workbook workbook)
+    {
+        logger.log(Level.FINE, "Generate XSSF Workbook Metadata");
+
+        try
+        {
+            rdfText.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n");
+            rdfText.append("<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:rdfs=\"http://www.w3.org/2000/01/rdf-schema#\" xmlns:x=\"http://rdfs.arjuna.com/xssf#\" xmlns:d=\"http://rdfs.arjuna.com/description#\">\n");
+
+            rdfText.append("    <x:Workbook rdf:about=\"");
+            rdfText.append(workbook.aboutURI);
+            rdfText.append("\">\n");
+            for (Sheet sheet: workbook.sheets.values())
+            {
+                rdfText.append("        <x:hasSheet rdf:resource=\"");
+                rdfText.append(sheet.aboutURI);
+                rdfText.append("\"/>\n");
+            }
+            rdfText.append("    </x:Workbook>\n");
+
+            for (Sheet sheet: workbook.sheets.values())
+                generateXSSFSheetMetadata(rdfText, sheet);
+
+            rdfText.append("</rdf:RDF>\n");
+        }
+        catch (Throwable throwable)
+        {
+            logger.log(Level.WARNING, "Problem Generating during XSSF Workbook Metadata", throwable);
+        }
+    }
+
+    private void generateXSSFSheetMetadata(StringBuffer rdfText, Sheet sheet)
+    {
+        rdfText.append('\n');
+
+        rdfText.append("    <x:Sheet rdf:about=\"");
+        rdfText.append(sheet.aboutURI);
+        rdfText.append("\">\n");
+        if (sheet.name != null)
+        {
+            rdfText.append("        <d:hasTitle>");
+            rdfText.append(sheet.name);
+            rdfText.append("</d:hasTitle>\n");
+        }
+        for (Column column: sheet.columns.values())
+        {
+            rdfText.append("        <x:hasColumn rdf:resource=\"");
+            rdfText.append(column.aboutURI);
+            rdfText.append("\"/>\n");
+        }
+        rdfText.append("    </x:Sheet>\n");
+
+        for (Column column: sheet.columns.values())
+            generateXSSFColumnMetadata(rdfText, column);
+    }
+
+    private void generateXSSFColumnMetadata(StringBuffer rdfText, Column column)
+    {
+        rdfText.append('\n');
+
+        rdfText.append("    <x:Column rdf:about=\"");
+        rdfText.append(column.aboutURI);
+        rdfText.append("\">\n");
+        rdfText.append("        <x:hasLabel>");
+        rdfText.append(column.label);
+        rdfText.append("</x:hasLabel>\n");
+        rdfText.append("        <x:hasIndex>");
+        rdfText.append(column.index);
+        rdfText.append("</x:hasIndex>\n");
+        if (column.type != null)
+        {
+            rdfText.append("        <x:hasType>");
+            rdfText.append(column.type);
+            rdfText.append("</x:hasType>\n");
+        }
+        if (column.title != null)
+        {
+            rdfText.append("        <d:hasTitle>");
+            rdfText.append(column.title);
+            rdfText.append("</d:hasTitle>\n");
+        }
+        if (column.summary != null)
+        {
+            rdfText.append("        <d:hasSummary>");
+            rdfText.append(column.summary);
+            rdfText.append("</d:hasSummary>\n");
+        }
+        rdfText.append("    </x:Column>\n");
     }
 }

@@ -8,12 +8,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import static org.junit.Assert.*;
-
 import com.arjuna.databroker.metadata.Metadata;
 import com.arjuna.databroker.metadata.MetadataContent;
 import com.arjuna.databroker.metadata.MetadataInventory;

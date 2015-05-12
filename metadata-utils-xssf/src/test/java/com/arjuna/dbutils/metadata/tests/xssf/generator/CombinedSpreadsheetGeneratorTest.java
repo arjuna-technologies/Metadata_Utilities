@@ -11,12 +11,9 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.junit.Test;
-
 import com.arjuna.dbutils.metadata.xssf.generator.StreamedXSSFSpreadsheetMetadataGenerator;
 import com.arjuna.dbutils.metadata.xssf.generator.XSSFSpreadsheetMetadataGenerator;
-
 import static org.junit.Assert.*;
 
 public class CombinedSpreadsheetGeneratorTest
@@ -51,7 +48,7 @@ public class CombinedSpreadsheetGeneratorTest
         }
         catch (IOException ioException)
         {
-        	logger.log(Level.WARNING, "Problem generating Metadate", ioException);
+            logger.log(Level.WARNING, "Problem generating Metadate", ioException);
             fail("Failed to generate Metadate");
         }
     }

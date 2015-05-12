@@ -9,11 +9,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-
 import org.junit.Test;
-
 import com.arjuna.dbutils.metadata.xssf.generator.StreamedXSSFSpreadsheetMetadataGenerator;
-
 import static org.junit.Assert.*;
 
 public class StreamedXSSFSpreadsheetGeneratorTest
