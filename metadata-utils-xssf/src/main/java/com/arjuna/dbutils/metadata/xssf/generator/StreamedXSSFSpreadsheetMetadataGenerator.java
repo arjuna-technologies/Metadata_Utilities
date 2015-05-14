@@ -105,7 +105,7 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
             workbookInputStream.close();
 
             XMLReader      sheetParser  = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
-            ContentHandler sheetHandler = new SheetHandler(sharedStringsTable, stylesTable);
+            ContentHandler sheetHandler = new SheetHandler(sharedStringsTable, stylesTable, workbook);
             sheetParser.setContentHandler(sheetHandler);
 
             Iterator<InputStream> sheetInputStreamIterator = xssfReader.getSheetsData();
@@ -169,6 +169,7 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
     {
         private static final String SPREADSHEETML_NAMESPACE = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
         private static final String NONE_NAMESPACE          = "";
+        private static final String WORKSHEET_TAGNAME       = "worksheet";
         private static final String ROW_TAGNAME             = "row";
         private static final String CELL_TAGNAME            = "c";
         private static final String VALUE_TAGNAME           = "v";
@@ -177,7 +178,7 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
         private static final String TYPE_ATTRNAME           = "t";
         private static final String STYLE_ATTRNAME          = "s";
 
-        public SheetHandler(SharedStringsTable sharedStringsTable, StylesTable stylesTable)
+        public SheetHandler(SharedStringsTable sharedStringsTable, StylesTable stylesTable, Workbook workbook)
         {
             _sharedStringsTable = sharedStringsTable;
             _stylesTable        = stylesTable;
@@ -186,7 +187,10 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
             _cellType           = null;
             _cellStyle          = null;
             _value              = new StringBuffer();
-            _rowMap             = new LinkedHashMap<String, String>();
+
+            _workbook = workbook;
+            _sheet    = null;
+            _column   = null;
         }
 
         @Override
@@ -195,11 +199,24 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
         {
             try
             {
-                if ((localName != null) && localName.equals(CELL_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
+                System.out.println("Tag: [" + localName + "][" + uri + "]");
+                if ((localName != null) && localName.equals(WORKSHEET_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
                 {
                     _cellName  = attributes.getValue(NONE_NAMESPACE, REF_ATTRNAME);
                     _cellType  = attributes.getValue(NONE_NAMESPACE, TYPE_ATTRNAME);
                     _cellStyle = attributes.getValue(NONE_NAMESPACE, STYLE_ATTRNAME);
+
+                    System.out.println("  Cell: [" + _cellName + "][" + _cellType + "][" + _cellStyle + "]");
+                }
+                else if ((localName != null) && localName.equals(CELL_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
+                {
+                    for (int index = 0; index < attributes.getLength(); index++)
+                    {
+                    	String celLocalName = attributes.getLocalName(index);
+                    	String cellURI      = attributes.getURI(index);
+
+                    	System.out.println("  Cell: [" + celLocalName + "][" + cellURI + "]");
+                    }
                 }
                 else if ((localName != null) && localName.equals(VALUE_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
                     _value.setLength(0);
@@ -216,6 +233,7 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
         {
             try
             {
+                System.out.println("/Tag: [" + localName + "][" + uri + "]");
                 if ((localName != null) && localName.equals(VALUE_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
                 {
                     if (_cellType == null)
@@ -229,7 +247,6 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
                             if (formatString == null)
                                 formatString = BuiltinFormats.getBuiltinFormat(formatIndex);
                             String text = _formatter.formatRawCellContents(Double.parseDouble(_value.toString()), formatIndex, formatString);
-                            _rowMap.put(removeRowNumber(_cellName), text);
                         }
                         catch (NumberFormatException numberFormatException)
                         {
@@ -240,8 +257,6 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
                             logger.log(Level.WARNING, "Failed to find 'Style'", indexOutOfBoundsException);
                         }
                     }
-                    else if (_cellType.equals("n"))
-                        _rowMap.put(removeRowNumber(_cellName), _value.toString());
                     else if (_cellType.equals("s"))
                     {
                         String sharedStringsTableIndex = _value.toString();
@@ -249,7 +264,8 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
                         {
                             int index = Integer.parseInt(sharedStringsTableIndex);
                             XSSFRichTextString rtss = new XSSFRichTextString(_sharedStringsTable.getEntryAt(index));
-                            _rowMap.put(removeRowNumber(_cellName), rtss.toString());
+
+                            // Test
                         }
                         catch (NumberFormatException numberFormatException)
                         {
@@ -263,10 +279,10 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
                     else
                         logger.log(Level.WARNING, "Unsupported cell type '" + _cellType + "'");
 
+                    System.out.println("  Value: [" + _value + "]");
+
                     _value.setLength(0);
                 }
-                else if ((localName != null) && localName.equals(ROW_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
-                    _rowMap.clear();
             }
             catch (Throwable throwable)
             {
@@ -304,7 +320,10 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
         private String              _cellType;
         private String              _cellStyle;
         private StringBuffer        _value;
-        private Map<String, String> _rowMap;
+
+        private Workbook _workbook;
+        private Sheet    _sheet;
+        private Column   _column;
     }
 
     private void generateXSSFWorkbookMetadata(StringBuffer rdfText, Workbook workbook)

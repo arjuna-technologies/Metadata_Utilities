@@ -9,8 +9,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+
 import org.junit.Test;
+
 import com.arjuna.dbutils.metadata.xssf.generator.XSSFSpreadsheetMetadataGenerator;
+
 import static org.junit.Assert.*;
 
 public class XSSFSpreadsheetGeneratorTest
@@ -56,6 +59,8 @@ public class XSSFSpreadsheetGeneratorTest
             String rdf = xssfSpeadsheetMetadataGenerator.generateXSSFSpeadsheetMetadata(URI.create("http://rdf.data.org/example_xssf"), spreadsheetData);
 
             assertNotNull("Unexpected non null RDF", rdf);
+
+            System.out.println("[" + rdf + "]");
         }
         catch (IOException ioException)
         {
