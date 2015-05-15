@@ -236,7 +236,7 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
                 System.out.println("/Tag: [" + localName + "][" + uri + "]");
                 if ((localName != null) && localName.equals(VALUE_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
                 {
-                    if (_cellType == null)
+                    if ((_cellType == null) && (_cellType != null))
                     {
                         try
                         {
@@ -257,7 +257,7 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
                             logger.log(Level.WARNING, "Failed to find 'Style'", indexOutOfBoundsException);
                         }
                     }
-                    else if (_cellType.equals("s"))
+                    else if ((_cellType == null) && _cellType.equals("s"))
                     {
                         String sharedStringsTableIndex = _value.toString();
                         try
