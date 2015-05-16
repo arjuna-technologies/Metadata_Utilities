@@ -38,7 +38,7 @@ public class StreamedXSSFSpreadsheetGeneratorTest
             String rdf = streamedXSSFSpeadsheetMetadataGenerator.generateXSSFSpreadsheetMetadata(URI.create("http://rdf.data.org/example_xssf"), spreadsheetData);
 
             assertNotNull("Unexpected non null RDF", rdf);
-            
+
             System.out.println("[" + rdf + "]");
         }
         catch (IOException ioException)

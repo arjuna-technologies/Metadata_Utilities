@@ -212,10 +212,10 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
                 {
                     for (int index = 0; index < attributes.getLength(); index++)
                     {
-                    	String celLocalName = attributes.getLocalName(index);
-                    	String cellURI      = attributes.getURI(index);
+                        String celLocalName = attributes.getLocalName(index);
+                        String cellURI      = attributes.getURI(index);
 
-                    	System.out.println("  Cell: [" + celLocalName + "][" + cellURI + "]");
+                        System.out.println("  Cell: [" + celLocalName + "][" + cellURI + "]");
                     }
                 }
                 else if ((localName != null) && localName.equals(VALUE_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
@@ -257,7 +257,7 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
                             logger.log(Level.WARNING, "Failed to find 'Style'", indexOutOfBoundsException);
                         }
                     }
-                    else if ((_cellType == null) && _cellType.equals("s"))
+                    else if ((_cellType != null) && _cellType.equals("s"))
                     {
                         String sharedStringsTableIndex = _value.toString();
                         try
@@ -276,7 +276,7 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
                             logger.log(Level.WARNING, "Failed to find 'Shared String' - '" + sharedStringsTableIndex + "'", indexOutOfBoundsException);
                         }
                     }
-                    else
+                    else if (_cellType != null)
                         logger.log(Level.WARNING, "Unsupported cell type '" + _cellType + "'");
 
                     System.out.println("  Value: [" + _value + "]");
