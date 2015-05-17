@@ -130,6 +130,7 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
             return null;
         }
     }
+
     private class WorkbookHandler extends DefaultHandler
     {
         private static final String SPREADSHEETML_NAMESPACE = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
@@ -324,6 +325,77 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
         private Workbook _workbook;
         private Sheet    _sheet;
         private Column   _column;
+    }
+
+
+    private class CommentsHandler extends DefaultHandler
+    {
+        private static final String SPREADSHEETML_NAMESPACE = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+        private static final String RELATIONSHIPS_NAMESPACE = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+        private static final String NONE_NAMESPACE          = "";
+        private static final String SHEET_TAGNAME           = "sheet";
+        private static final String ID_ATTRNAME             = "id";
+        private static final String NAME_ATTRNAME           = "name";
+
+        public CommentsHandler(URI baseRDFURI, Workbook workbook)
+        {
+             _baseRDFURI = baseRDFURI;
+             _workbook   = workbook;
+        }
+
+        @Override
+        public void startElement(String uri, String localName, String qName, Attributes attributes)
+            throws SAXException
+        {
+            if ((localName != null) && localName.equals(SHEET_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
+            {
+                UUID   uuid  = UUID.randomUUID();
+                String name  = attributes.getValue(NONE_NAMESPACE, NAME_ATTRNAME);
+                String refId = attributes.getValue(RELATIONSHIPS_NAMESPACE, ID_ATTRNAME);
+
+                Sheet sheet = new Sheet(_baseRDFURI.resolve('#' + uuid.toString()), name, new HashMap<String, Column>());
+
+                _workbook.sheets.put(refId, sheet);
+            }
+        }
+
+        private URI      _baseRDFURI;
+        private Workbook _workbook;
+    }
+
+    private class SharedStringsHandler extends DefaultHandler
+    {
+        private static final String SPREADSHEETML_NAMESPACE = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+        private static final String RELATIONSHIPS_NAMESPACE = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+        private static final String NONE_NAMESPACE          = "";
+        private static final String SHEET_TAGNAME           = "sheet";
+        private static final String ID_ATTRNAME             = "id";
+        private static final String NAME_ATTRNAME           = "name";
+
+        public SharedStringsHandler(URI baseRDFURI, Workbook workbook)
+        {
+             _baseRDFURI = baseRDFURI;
+             _workbook   = workbook;
+        }
+
+        @Override
+        public void startElement(String uri, String localName, String qName, Attributes attributes)
+            throws SAXException
+        {
+            if ((localName != null) && localName.equals(SHEET_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
+            {
+                UUID   uuid  = UUID.randomUUID();
+                String name  = attributes.getValue(NONE_NAMESPACE, NAME_ATTRNAME);
+                String refId = attributes.getValue(RELATIONSHIPS_NAMESPACE, ID_ATTRNAME);
+
+                Sheet sheet = new Sheet(_baseRDFURI.resolve('#' + uuid.toString()), name, new HashMap<String, Column>());
+
+                _workbook.sheets.put(refId, sheet);
+            }
+        }
+
+        private URI      _baseRDFURI;
+        private Workbook _workbook;
     }
 
     private void generateXSSFWorkbookMetadata(StringBuffer rdfText, Workbook workbook)
