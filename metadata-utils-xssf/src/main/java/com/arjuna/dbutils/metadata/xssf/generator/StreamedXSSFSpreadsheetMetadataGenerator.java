@@ -8,8 +8,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -18,10 +16,8 @@ import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
-import org.apache.poi.xssf.model.SharedStringsTable;
 import org.apache.poi.xssf.model.StylesTable;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -56,15 +52,19 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
 
     private class Sheet
     {
-        public Sheet(URI aboutURI, String name, Map<String, Column> columns)
+        public Sheet(URI aboutURI, String name, String sheetId, String refId, Map<String, Column> columns)
         {
             this.aboutURI = aboutURI;
             this.name     = name;
+            this.sheetId  = sheetId;
+            this.refId    = refId;
             this.columns  = columns;
         }
 
         public URI                 aboutURI;
         public String              name;
+        public String              sheetId;
+        public String              refId;
         public Map<String, Column> columns;
     }
 
@@ -86,14 +86,13 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
 
         try
         {
+            InputStream xssfWorkbookInputStream = new ByteArrayInputStream(spreadsheetData);
+            OPCPackage  opcPackage              = OPCPackage.open(xssfWorkbookInputStream);
+            XSSFReader  xssfReader              = new XSSFReader(opcPackage);
+            StylesTable stylesTable             = xssfReader.getStylesTable();
+
             UUID     workbookUUID = UUID.randomUUID();
             Workbook workbook     = new Workbook(baseRDFURI.resolve('#' + workbookUUID.toString()), new HashMap<String, Sheet>());
-
-            InputStream        xssfWorkbookInputStream = new ByteArrayInputStream(spreadsheetData);
-            OPCPackage         opcPackage              = OPCPackage.open(xssfWorkbookInputStream);
-            XSSFReader         xssfReader              = new XSSFReader(opcPackage);
-            SharedStringsTable sharedStringsTable      = xssfReader.getSharedStringsTable();
-            StylesTable        stylesTable             = xssfReader.getStylesTable();
 
             XMLReader      workbookParser  = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
             ContentHandler workbookHandler = new WorkbookHandler(baseRDFURI, workbook);
@@ -104,19 +103,27 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
             workbookParser.parse(workbookSource);
             workbookInputStream.close();
 
-            XMLReader      sheetParser  = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
-            ContentHandler sheetHandler = new SheetHandler(sharedStringsTable, stylesTable, workbook);
-            sheetParser.setContentHandler(sheetHandler);
-
-            Iterator<InputStream> sheetInputStreamIterator = xssfReader.getSheetsData();
-            while (sheetInputStreamIterator.hasNext())
+            for (Sheet sheet: workbook.sheets.values())
             {
-                InputStream sheetInputStream = sheetInputStreamIterator.next();
+                XMLReader      sheetParser  = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
+                ContentHandler sheetHandler = new SheetHandler(baseRDFURI, stylesTable, sheet);
+                sheetParser.setContentHandler(sheetHandler);
+
+                InputStream sheetInputStream = xssfReader.getSheet(sheet.refId);
                 InputSource sheetSource = new InputSource(sheetInputStream);
                 sheetParser.parse(sheetSource);
                 sheetInputStream.close();
             }
             xssfWorkbookInputStream.close();
+
+            XMLReader      sharedStringsParser  = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
+            ContentHandler sharedStringsHandler = new SharedStringsHandler(workbook);
+            sharedStringsParser.setContentHandler(sharedStringsHandler);
+
+            InputStream sharedStringsInputStream = xssfReader.getSharedStringsData();
+            InputSource sharedStringsSource = new InputSource(sharedStringsInputStream);
+            sharedStringsParser.parse(sharedStringsSource);
+            sharedStringsInputStream.close();
 
             StringBuffer rdfText = new StringBuffer();
             generateXSSFWorkbookMetadata(rdfText, workbook);
@@ -137,8 +144,9 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
         private static final String RELATIONSHIPS_NAMESPACE = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
         private static final String NONE_NAMESPACE          = "";
         private static final String SHEET_TAGNAME           = "sheet";
-        private static final String ID_ATTRNAME             = "id";
         private static final String NAME_ATTRNAME           = "name";
+        private static final String SHEETID_ATTRNAME        = "sheetId";
+        private static final String ID_ATTRNAME             = "id";
 
         public WorkbookHandler(URI baseRDFURI, Workbook workbook)
         {
@@ -152,11 +160,12 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
         {
             if ((localName != null) && localName.equals(SHEET_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
             {
-                UUID   uuid  = UUID.randomUUID();
-                String name  = attributes.getValue(NONE_NAMESPACE, NAME_ATTRNAME);
-                String refId = attributes.getValue(RELATIONSHIPS_NAMESPACE, ID_ATTRNAME);
+                UUID   uuid    = UUID.randomUUID();
+                String name    = attributes.getValue(NONE_NAMESPACE, NAME_ATTRNAME);
+                String sheetId = attributes.getValue(NONE_NAMESPACE, SHEETID_ATTRNAME);
+                String refId   = attributes.getValue(RELATIONSHIPS_NAMESPACE, ID_ATTRNAME);
 
-                Sheet sheet = new Sheet(_baseRDFURI.resolve('#' + uuid.toString()), name, new HashMap<String, Column>());
+                Sheet sheet = new Sheet(_baseRDFURI.resolve('#' + uuid.toString()), name, sheetId, refId, new HashMap<String, Column>());
 
                 _workbook.sheets.put(refId, sheet);
             }
@@ -170,28 +179,22 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
     {
         private static final String SPREADSHEETML_NAMESPACE = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
         private static final String NONE_NAMESPACE          = "";
-        private static final String WORKSHEET_TAGNAME       = "worksheet";
-        private static final String ROW_TAGNAME             = "row";
         private static final String CELL_TAGNAME            = "c";
         private static final String VALUE_TAGNAME           = "v";
-        private static final String SHEETDATA_TAGNAME       = "sheetData";
         private static final String REF_ATTRNAME            = "r";
         private static final String TYPE_ATTRNAME           = "t";
         private static final String STYLE_ATTRNAME          = "s";
 
-        public SheetHandler(SharedStringsTable sharedStringsTable, StylesTable stylesTable, Workbook workbook)
+        public SheetHandler(URI baseRDFURI, StylesTable stylesTable, Sheet sheet)
         {
-            _sharedStringsTable = sharedStringsTable;
-            _stylesTable        = stylesTable;
-            _formatter          = new DataFormatter();
-            _cellName           = null;
-            _cellType           = null;
-            _cellStyle          = null;
-            _value              = new StringBuffer();
+            _baseRDFURI  = baseRDFURI;
+            _stylesTable = stylesTable;
+            _sheet       = sheet;
 
-            _workbook = workbook;
-            _sheet    = null;
-            _column   = null;
+            _cellName  = null;
+            _cellType  = null;
+            _cellStyle = null;
+            _value     = new StringBuffer();
         }
 
         @Override
@@ -200,24 +203,11 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
         {
             try
             {
-                System.out.println("Tag: [" + localName + "][" + uri + "]");
-                if ((localName != null) && localName.equals(WORKSHEET_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
+                if ((localName != null) && localName.equals(CELL_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
                 {
                     _cellName  = attributes.getValue(NONE_NAMESPACE, REF_ATTRNAME);
                     _cellType  = attributes.getValue(NONE_NAMESPACE, TYPE_ATTRNAME);
                     _cellStyle = attributes.getValue(NONE_NAMESPACE, STYLE_ATTRNAME);
-
-                    System.out.println("  Cell: [" + _cellName + "][" + _cellType + "][" + _cellStyle + "]");
-                }
-                else if ((localName != null) && localName.equals(CELL_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
-                {
-                    for (int index = 0; index < attributes.getLength(); index++)
-                    {
-                        String celLocalName = attributes.getLocalName(index);
-                        String cellURI      = attributes.getURI(index);
-
-                        System.out.println("  Cell: [" + celLocalName + "][" + cellURI + "]");
-                    }
                 }
                 else if ((localName != null) && localName.equals(VALUE_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
                     _value.setLength(0);
@@ -234,53 +224,20 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
         {
             try
             {
-                System.out.println("/Tag: [" + localName + "][" + uri + "]");
                 if ((localName != null) && localName.equals(VALUE_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
                 {
-                    if ((_cellType == null) && (_cellType != null))
-                    {
-                        try
-                        {
-                            int           styleIndex   = Integer.parseInt(_cellStyle);
-                            XSSFCellStyle style        = _stylesTable.getStyleAt(styleIndex);
-                            short         formatIndex  = style.getDataFormat();
-                            String        formatString = style.getDataFormatString();
-                            if (formatString == null)
-                                formatString = BuiltinFormats.getBuiltinFormat(formatIndex);
-                            String text = _formatter.formatRawCellContents(Double.parseDouble(_value.toString()), formatIndex, formatString);
-                        }
-                        catch (NumberFormatException numberFormatException)
-                        {
-                            logger.log(Level.WARNING, "Failed to parse 'Style' index", numberFormatException);
-                        }
-                        catch (IndexOutOfBoundsException indexOutOfBoundsException)
-                        {
-                            logger.log(Level.WARNING, "Failed to find 'Style'", indexOutOfBoundsException);
-                        }
-                    }
-                    else if ((_cellType != null) && _cellType.equals("s"))
-                    {
-                        String sharedStringsTableIndex = _value.toString();
-                        try
-                        {
-                            int index = Integer.parseInt(sharedStringsTableIndex);
-                            XSSFRichTextString rtss = new XSSFRichTextString(_sharedStringsTable.getEntryAt(index));
+                    System.out.println("Cell: [" + _cellName + "][" + getColumnLabel(_cellName) + "-" + getRowNumber(_cellName) + "][" + _cellType + "][" + _cellStyle + "]\"" + _value + "\"");
 
-                            // Test
-                        }
-                        catch (NumberFormatException numberFormatException)
-                        {
-                            logger.log(Level.WARNING, "Failed to parse 'Shared Strings Table' index '" + sharedStringsTableIndex + "'", numberFormatException);
-                        }
-                        catch (IndexOutOfBoundsException indexOutOfBoundsException)
-                        {
-                            logger.log(Level.WARNING, "Failed to find 'Shared String' - '" + sharedStringsTableIndex + "'", indexOutOfBoundsException);
-                        }
-                    }
-                    else if (_cellType != null)
-                        logger.log(Level.WARNING, "Unsupported cell type '" + _cellType + "'");
+                    String rowNumber = getRowNumber(_cellName);
+                    if ("1".equals(rowNumber))
+                    {
+                        UUID   uuid        = UUID.randomUUID();
+                        String columnLabel = getColumnLabel(_cellName);
 
-                    System.out.println("  Value: [" + _value + "]");
+                        Column column = new Column(_baseRDFURI.resolve('#' + uuid.toString()), columnLabel, null, null, null, null);
+
+                        _sheet.columns.put(columnLabel, column);
+                    }
 
                     _value.setLength(0);
                 }
@@ -305,97 +262,197 @@ public class StreamedXSSFSpreadsheetMetadataGenerator
             }
         }
 
-        private String removeRowNumber(String cellName)
-        {
-            int index = 0;
-            while ((index < cellName.length()) && Character.isAlphabetic(cellName.charAt(index)))
-                index++;
+        private URI         _baseRDFURI;
+        private Sheet       _sheet;
+        private StylesTable _stylesTable;
 
-            return cellName.substring(0, index);
-        }
-
-        private SharedStringsTable  _sharedStringsTable;
-        private StylesTable         _stylesTable;
-        private DataFormatter       _formatter;
-        private String              _cellName;
-        private String              _cellType;
-        private String              _cellStyle;
-        private StringBuffer        _value;
-
-        private Workbook _workbook;
-        private Sheet    _sheet;
-        private Column   _column;
+        private String        _cellName;
+        private String        _cellType;
+        private String        _cellStyle;
+        private StringBuffer  _value;
     }
-
 
     private class CommentsHandler extends DefaultHandler
     {
         private static final String SPREADSHEETML_NAMESPACE = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
-        private static final String RELATIONSHIPS_NAMESPACE = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
         private static final String NONE_NAMESPACE          = "";
-        private static final String SHEET_TAGNAME           = "sheet";
-        private static final String ID_ATTRNAME             = "id";
-        private static final String NAME_ATTRNAME           = "name";
+        private static final String COMMENT_TAGNAME         = "comment";
+        private static final String T_TAGNAME               = "t";
+        private static final String REF_ATTRNAME            = "ref";
 
-        public CommentsHandler(URI baseRDFURI, Workbook workbook)
+        public CommentsHandler(Sheet sheet)
         {
-             _baseRDFURI = baseRDFURI;
-             _workbook   = workbook;
+             _sheet = sheet;
+             _ref   = null;
+             _value = new StringBuffer();
         }
 
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes)
             throws SAXException
         {
-            if ((localName != null) && localName.equals(SHEET_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
+            if ((localName != null) && localName.equals(COMMENT_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
+                _ref = attributes.getValue(NONE_NAMESPACE, REF_ATTRNAME);
+            else if ((localName != null) && localName.equals(T_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
+                _value.setLength(0);
+        }
+
+        @Override
+        public void endElement(String uri, String localName, String qName)
+            throws SAXException
+        {
+            if ((localName != null) && localName.equals(T_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
             {
-                UUID   uuid  = UUID.randomUUID();
-                String name  = attributes.getValue(NONE_NAMESPACE, NAME_ATTRNAME);
-                String refId = attributes.getValue(RELATIONSHIPS_NAMESPACE, ID_ATTRNAME);
+                String value = _value.toString();
 
-                Sheet sheet = new Sheet(_baseRDFURI.resolve('#' + uuid.toString()), name, new HashMap<String, Column>());
-
-                _workbook.sheets.put(refId, sheet);
+                System.out.println("C{{{" + value + "}}}}");
             }
         }
 
-        private URI      _baseRDFURI;
-        private Workbook _workbook;
+        @Override
+        public void characters(char[] characters, int start, int length)
+            throws SAXException
+        {
+            try
+            {
+                _value.append(characters, start, length);
+            }
+            catch (Throwable throwable)
+            {
+                logger.log(Level.WARNING, "Problem processing characters", throwable);
+            }
+        }
+
+        private Sheet        _sheet;
+        private String       _ref;
+        private StringBuffer _value;
     }
 
     private class SharedStringsHandler extends DefaultHandler
     {
         private static final String SPREADSHEETML_NAMESPACE = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
-        private static final String RELATIONSHIPS_NAMESPACE = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
-        private static final String NONE_NAMESPACE          = "";
-        private static final String SHEET_TAGNAME           = "sheet";
-        private static final String ID_ATTRNAME             = "id";
-        private static final String NAME_ATTRNAME           = "name";
+        private static final String TEXT_TAGNAME            = "t";
 
-        public SharedStringsHandler(URI baseRDFURI, Workbook workbook)
+        public SharedStringsHandler(Workbook workbook)
         {
-             _baseRDFURI = baseRDFURI;
-             _workbook   = workbook;
+             _workbook = workbook;
+             _value    = new StringBuffer();
+             _index    = 0;
         }
 
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes)
             throws SAXException
         {
-            if ((localName != null) && localName.equals(SHEET_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
+            if ((localName != null) && localName.equals(TEXT_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
+                _value.setLength(0);
+        }
+
+        @Override
+        public void endElement(String uri, String localName, String qName)
+            throws SAXException
+        {
+            if ((localName != null) && localName.equals(TEXT_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
             {
-                UUID   uuid  = UUID.randomUUID();
-                String name  = attributes.getValue(NONE_NAMESPACE, NAME_ATTRNAME);
-                String refId = attributes.getValue(RELATIONSHIPS_NAMESPACE, ID_ATTRNAME);
+                String value = _value.toString();
 
-                Sheet sheet = new Sheet(_baseRDFURI.resolve('#' + uuid.toString()), name, new HashMap<String, Column>());
-
-                _workbook.sheets.put(refId, sheet);
+                System.out.println("S{{{" + value + "}}}} " + _index);
+                _index++;
             }
         }
 
-        private URI      _baseRDFURI;
-        private Workbook _workbook;
+        @Override
+        public void characters(char[] characters, int start, int length)
+            throws SAXException
+        {
+            try
+            {
+                _value.append(characters, start, length);
+            }
+            catch (Throwable throwable)
+            {
+                logger.log(Level.WARNING, "Problem processing characters", throwable);
+            }
+        }
+
+        private Workbook     _workbook;
+        private StringBuffer _value;
+        private int          _index;
+    }
+
+    private String getColumnLabel(String cellName)
+    {
+        int index = 0;
+        while ((index < cellName.length()) && Character.isAlphabetic(cellName.charAt(index)))
+            index++;
+
+        return cellName.substring(0, index);
+    }
+
+    private String getRowNumber(String cellName)
+    {
+        int index = 0;
+        while ((index < cellName.length()) && Character.isAlphabetic(cellName.charAt(index)))
+            index++;
+
+        return cellName.substring(index, cellName.length());
+    }
+
+    private String getCellValue(String cellType, String cellStyle, String cellValue, StylesTable stylesTable)
+    {
+        DataFormatter formatter = new DataFormatter();
+
+        if ((cellType == null) && (cellStyle != null))
+        {
+            try
+            {
+                int           styleIndex   = Integer.parseInt(cellStyle);
+                XSSFCellStyle style        = stylesTable.getStyleAt(styleIndex);
+                short         formatIndex  = style.getDataFormat();
+                String        formatString = style.getDataFormatString();
+                if (formatString == null)
+                    formatString = BuiltinFormats.getBuiltinFormat(formatIndex);
+
+                return formatter.formatRawCellContents(Double.parseDouble(cellValue.toString()), formatIndex, formatString);
+            }
+            catch (NumberFormatException numberFormatException)
+            {
+                logger.log(Level.WARNING, "Failed to parse 'Style' index", numberFormatException);
+            }
+            catch (IndexOutOfBoundsException indexOutOfBoundsException)
+            {
+                logger.log(Level.WARNING, "Failed to find 'Style'", indexOutOfBoundsException);
+            }
+        }
+        else if ((cellType != null) && cellType.equals("s"))
+        {
+            String sharedStringsTableIndex = cellValue.toString();
+            try
+            {
+//                int                index = Integer.parseInt(sharedStringsTableIndex);
+//                XSSFRichTextString rtss  = new XSSFRichTextString(_sharedStringsTable.getEntryAt(index));
+
+//                return rtss.toString();
+
+                return "unknown (unmaped)!";
+            }
+            catch (NumberFormatException numberFormatException)
+            {
+                logger.log(Level.WARNING, "Failed to parse 'Shared Strings Table' index '" + sharedStringsTableIndex + "'", numberFormatException);
+            }
+            catch (IndexOutOfBoundsException indexOutOfBoundsException)
+            {
+                logger.log(Level.WARNING, "Failed to find 'Shared String' - '" + sharedStringsTableIndex + "'", indexOutOfBoundsException);
+            }
+        }
+        else if ((cellType != null) && cellType.equals("n"))
+        {
+            String sharedStringsTableIndex = cellValue.toString();
+        }
+        else if (cellType != null)
+            logger.log(Level.WARNING, "Unsupported cell type '" + cellValue + "', '" + cellType + "', '" + cellType + "'");
+
+        return "problem!";
     }
 
     private void generateXSSFWorkbookMetadata(StringBuffer rdfText, Workbook workbook)
