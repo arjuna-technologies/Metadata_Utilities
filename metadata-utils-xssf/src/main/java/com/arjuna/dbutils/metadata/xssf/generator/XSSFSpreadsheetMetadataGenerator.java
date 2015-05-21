@@ -11,9 +11,11 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFComment;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -31,7 +33,7 @@ public class XSSFSpreadsheetMetadataGenerator
         try
         {
             InputStream xssfWorkbookInputStream = new ByteArrayInputStream(spreadsheetData);
-            String      metadata                = generateXSSFSpeadsheetMetadata(baseRDFURI, xssfWorkbookInputStream);
+            String      metadata                = generateXSSFSpeadsheetMetadata(baseRDFURI, xssfWorkbookInputStream, null, null);
             xssfWorkbookInputStream.close();
 
             return metadata;
@@ -51,7 +53,7 @@ public class XSSFSpreadsheetMetadataGenerator
         try
         {
             InputStream xssfWorkbookInputStream = new FileInputStream(spreadsheetFile);
-            String      metadata                = generateXSSFSpeadsheetMetadata(baseRDFURI, xssfWorkbookInputStream);
+            String      metadata                = generateXSSFSpeadsheetMetadata(baseRDFURI, xssfWorkbookInputStream, null, null);
             xssfWorkbookInputStream.close();
 
             return metadata;
@@ -64,7 +66,29 @@ public class XSSFSpreadsheetMetadataGenerator
         }
     }
 
-    private String generateXSSFSpeadsheetMetadata(URI baseRDFURI, InputStream xssfWorkbookInputStream)
+    public String generateXSSFSpeadsheetMetadata(URI baseRDFURI, Map<String, Object> spreadsheetMap)
+    {
+        logger.log(Level.FINE, "Generate XSSF Speadsheet Metadata (File)");
+
+        try
+        {
+            InputStream xssfWorkbookInputStream = new ByteArrayInputStream((byte[]) spreadsheetMap.get("data"));
+            String      filename                = (String) spreadsheetMap.get("filename");
+            String      location                = (String) spreadsheetMap.get("location");
+            String      metadata                = generateXSSFSpeadsheetMetadata(baseRDFURI, xssfWorkbookInputStream, filename, location);
+            xssfWorkbookInputStream.close();
+
+            return metadata;
+        }
+        catch (Throwable throwable)
+        {
+            logger.log(Level.WARNING, "Problem Generating during XSSF Speadsheet Metadata Scan (File)", throwable);
+
+            return null;
+        }
+    }
+
+    private String generateXSSFSpeadsheetMetadata(URI baseRDFURI, InputStream xssfWorkbookInputStream, String filename, String location)
     {
         logger.log(Level.FINE, "Generate XSSF Speadsheet Metadata");
 
@@ -95,6 +119,25 @@ public class XSSFSpreadsheetMetadataGenerator
             rdfText.append("    <x:Workbook rdf:about=\"");
             rdfText.append(baseRDFURI.resolve('#' + workbookId));
             rdfText.append("\">\n");
+            if (filename != null)
+            {
+                rdfText.append("        <d:hasTitle>");
+                rdfText.append(filename);
+                rdfText.append("</d:hasTitle>\n");
+            }
+            if (filename != null)
+            {
+                rdfText.append("        <d:hasSummary>");
+                rdfText.append("This information was generated, automatically, from the spreadsheet ");
+                rdfText.append(filename);
+                rdfText.append("</d:hasSummary>\n");
+            }
+            if (location != null)
+            {
+                rdfText.append("        <d:hasLocation>");
+                rdfText.append(location);
+                rdfText.append("</d:hasLocation>\n");
+            }
             for (String sheetId: sheetIds)
             {
                 rdfText.append("        <x:hasSheet rdf:resource=\"");
