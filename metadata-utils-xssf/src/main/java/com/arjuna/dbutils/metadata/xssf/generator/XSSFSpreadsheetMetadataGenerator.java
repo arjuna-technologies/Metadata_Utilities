@@ -16,6 +16,8 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.poi.POIXMLProperties;
+import org.apache.poi.POIXMLProperties.CoreProperties;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFComment;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -111,6 +113,33 @@ public class XSSFSpreadsheetMetadataGenerator
                 firstItem = firstItem && sheetIds.isEmpty();
             }
 
+            String title   = null;
+            String summary = null;
+            String details = null;
+            String tags    = null;
+            String owner   = null;
+            try
+            {
+            	POIXMLProperties poiXMLProperties = xssfWorkbook.getProperties();
+            	if (poiXMLProperties != null)
+            	{
+            		CoreProperties coreProperties = poiXMLProperties.getCoreProperties();
+
+            		if (coreProperties != null)
+            		{
+            	        title   = coreProperties.getTitle();
+            	        summary = coreProperties.getSubject();
+            	        details = coreProperties.getDescription();
+            	        tags    = coreProperties.getKeywords();
+            	        owner   = coreProperties.getCreator();
+            		}
+                }
+            }
+            catch (Throwable throwable)
+            {
+                logger.log(Level.WARNING, "Problem getting properties during XSSF Speadsheet metadata scan", throwable);
+            }
+
             String workbookId = UUID.randomUUID().toString();
             if (! firstItem)
                 rdfText.append('\n');
@@ -119,18 +148,47 @@ public class XSSFSpreadsheetMetadataGenerator
             rdfText.append("    <x:Workbook rdf:about=\"");
             rdfText.append(baseRDFURI.resolve('#' + workbookId));
             rdfText.append("\">\n");
-            if (filename != null)
+            if ((title != null) || (filename != null))
             {
                 rdfText.append("        <d:hasTitle>");
-                rdfText.append(filename);
+                if ((title != null) && (! "".equals(title.trim())))
+                    rdfText.append(title);
+                else
+                    rdfText.append(filename);
                 rdfText.append("</d:hasTitle>\n");
             }
-            if (filename != null)
+            if ((summary != null) || (filename != null))
             {
                 rdfText.append("        <d:hasSummary>");
-                rdfText.append("This information was generated, automatically, from the spreadsheet ");
-                rdfText.append(filename);
+                if ((summary != null) && (! "".equals(summary.trim())))
+                	rdfText.append(summary);
+                else
+                {
+                    rdfText.append("This information was generated, automatically, from the spreadsheet ");
+                    rdfText.append(filename);
+                }
                 rdfText.append("</d:hasSummary>\n");
+            }
+            if ((details != null) && (! "".equals(details.trim())))
+            {
+                rdfText.append("        <d:hasDetails>");
+                rdfText.append(details);
+                rdfText.append("</d:hasDetails>\n");
+            }
+            if ((owner != null) && (! "".equals(owner.trim())))
+            {
+                rdfText.append("        <d:hasOwner>");
+                rdfText.append(owner);
+                rdfText.append("</d:hasOwner>\n");
+            }
+            if ((tags != null) && (! "".equals(tags.trim())))
+            {
+            	for (String tag: tags.split(","))
+            	{
+                    rdfText.append("        <d:hasTag>");
+                    rdfText.append(tag.trim());
+                    rdfText.append("</d:hasTag>\n");
+            	}
             }
             if (location != null)
             {
