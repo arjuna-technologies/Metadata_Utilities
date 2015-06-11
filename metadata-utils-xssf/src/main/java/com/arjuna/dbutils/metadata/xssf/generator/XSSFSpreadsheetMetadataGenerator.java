@@ -224,7 +224,7 @@ public class XSSFSpreadsheetMetadataGenerator
         XSSFRow      firstRow  = sheet.getRow(0);
         XSSFRow      secondRow = sheet.getRow(1);
         List<String> columnIds = new LinkedList<String>();
-        for (int columnIndex = sheet.getLeftCol(); columnIndex < sheet.getPhysicalNumberOfRows() + sheet.getLeftCol(); columnIndex++)
+        for (int columnIndex = firstRow.getFirstCellNum(); columnIndex < firstRow.getPhysicalNumberOfCells() + firstRow.getFirstCellNum(); columnIndex++)
         {
             String columnId = generateXSSFColumnMetadata(rdfText, firstItem, baseRDFURI, columnIndex, firstRow.getCell(columnIndex), sheet.getCellComment(0, columnIndex), secondRow.getCell(columnIndex));
             if (columnId != null)
