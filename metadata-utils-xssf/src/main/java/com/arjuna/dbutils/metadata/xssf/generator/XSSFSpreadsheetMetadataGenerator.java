@@ -120,19 +120,19 @@ public class XSSFSpreadsheetMetadataGenerator
             String owner   = null;
             try
             {
-            	POIXMLProperties poiXMLProperties = xssfWorkbook.getProperties();
-            	if (poiXMLProperties != null)
-            	{
-            		CoreProperties coreProperties = poiXMLProperties.getCoreProperties();
+                POIXMLProperties poiXMLProperties = xssfWorkbook.getProperties();
+                if (poiXMLProperties != null)
+                {
+                    CoreProperties coreProperties = poiXMLProperties.getCoreProperties();
 
-            		if (coreProperties != null)
-            		{
-            	        title   = coreProperties.getTitle();
-            	        summary = coreProperties.getSubject();
-            	        details = coreProperties.getDescription();
-            	        tags    = coreProperties.getKeywords();
-            	        owner   = coreProperties.getCreator();
-            		}
+                    if (coreProperties != null)
+                    {
+                        title   = coreProperties.getTitle();
+                        summary = coreProperties.getSubject();
+                        details = coreProperties.getDescription();
+                        tags    = coreProperties.getKeywords();
+                        owner   = coreProperties.getCreator();
+                    }
                 }
             }
             catch (Throwable throwable)
@@ -161,7 +161,7 @@ public class XSSFSpreadsheetMetadataGenerator
             {
                 rdfText.append("        <d:hasSummary>");
                 if ((summary != null) && (! "".equals(summary.trim())))
-                	rdfText.append(summary);
+                    rdfText.append(summary);
                 else
                 {
                     rdfText.append("This information was generated, automatically, from the spreadsheet ");
@@ -183,12 +183,12 @@ public class XSSFSpreadsheetMetadataGenerator
             }
             if ((tags != null) && (! "".equals(tags.trim())))
             {
-            	for (String tag: tags.split(","))
-            	{
+                for (String tag: tags.split(","))
+                {
                     rdfText.append("        <d:hasTag>");
                     rdfText.append(tag.trim());
                     rdfText.append("</d:hasTag>\n");
-            	}
+                }
             }
             if (location != null)
             {

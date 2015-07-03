@@ -60,7 +60,7 @@ public class XSSFSpreadsheetGeneratorTest
 
             assertNotNull("Unexpected non null RDF", rdf);
 
-            System.out.println("[" + rdf + "]");
+//            System.out.println("[" + rdf + "]");
         }
         catch (IOException ioException)
         {
