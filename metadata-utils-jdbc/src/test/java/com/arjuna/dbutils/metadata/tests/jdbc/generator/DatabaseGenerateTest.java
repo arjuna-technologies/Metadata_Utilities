@@ -6,6 +6,7 @@ package com.arjuna.dbutils.metadata.tests.jdbc.generator;
 
 import java.net.URI;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.arjuna.dbutils.metadata.jdbc.generator.JDBCDatabaseMetadataGenerator;
@@ -14,6 +15,7 @@ import static org.junit.Assert.*;
 
 public class DatabaseGenerateTest
 {
+    @Ignore
     @Test
     public void databaseView()
     {
