@@ -17,24 +17,6 @@ import static org.junit.Assert.*;
 public class JSONArrayGeneratorTest
 {
     @Test
-    public void generateJSONArrayMetadataFile()
-    {
-        try
-        {
-            File                       jsonArrayFile                 = new File("Test01.json");
-            JSONArrayMetadataGenerator jsonArrayMetadataGenerator = new JSONArrayMetadataGenerator();
-
-            String rdf = jsonArrayMetadataGenerator.generateJSONArrayMetadata(URI.create("http://rdf.data.org/example_json"), jsonArrayFile);
-
-            assertNotNull("Unexpected non null RDF", rdf);
-        }
-        catch (Throwable throwable)
-        {
-            fail("Failed to generate Metadata Inventory");
-        }
-    }
-
-    @Test
     public void generateJSONArrayMetadataData()
     {
         try
@@ -58,7 +40,7 @@ public class JSONArrayGeneratorTest
 
             assertNotNull("Unexpected non null RDF", rdf);
 
-            System.out.println("[" + rdf + "]");
+//            System.out.println("[" + rdf + "]");
         }
         catch (IOException ioException)
         {

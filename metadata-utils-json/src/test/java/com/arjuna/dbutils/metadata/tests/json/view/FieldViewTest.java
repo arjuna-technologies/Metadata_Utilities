@@ -41,7 +41,7 @@ public class FieldViewTest
             MetadataInventory         metadataInventory         = new StoreMetadataInventory(dummyMetadataContentStore);
             Metadata                  metadata                  = metadataInventory.metadata("exampleJSON01").getMetadata();
 
-            _metadataContent = metadata.contents().selector(RDFMetadataContentsSelector.class).withPath("http://rdf.example.org/JSON_Test#TimeSheet").getMetadataContent();
+            _metadataContent = metadata.contents().selector(RDFMetadataContentsSelector.class).withPath("http://rdf.example.org/JSON_Test#2fbcd7b8-f2d7-4894-b1c4-e2a5e70e9bfa").getMetadataContent();
         }
         catch (Throwable throwable)
         {
@@ -55,16 +55,21 @@ public class FieldViewTest
         assertNotNull("Not expecting null Metadata Content object", _metadataContent);
 
         ArrayView arrayView = _metadataContent.getView(ArrayView.class);
-        assertNotNull("Not expecting null Spreadsheet View object", arrayView);
+        assertNotNull("Not expecting null ArrayView object", arrayView);
 
         List<FieldView> fieldsValue = arrayView.getFields();
-        assertNotNull("Not expecting null SheetView list value", fieldsValue);
-        assertEquals("Unexpecting length of SheetView list value", 2, fieldsValue.size());
+        assertNotNull("Not expecting null FieldView list value", fieldsValue);
+        assertEquals("Unexpecting length of FieldView list value", 2, fieldsValue.size());
 
-        FieldView fieldViewValue = fieldsValue.get(0);
-        assertNotNull("Not expecting null FieldView[0] value", fieldViewValue);
-        assertEquals("Unexpecting value for FieldView[0].name", "name", fieldViewValue.getName());
-        assertEquals("Unexpecting value for FieldView[0].type", "string", fieldViewValue.getType());
+        FieldView fieldViewValue0 = fieldsValue.get(0);
+        assertNotNull("Not expecting null FieldView[0] value", fieldViewValue0);
+        assertEquals("Unexpecting value for FieldView[0].name", "name01", fieldViewValue0.getName());
+        assertEquals("Unexpecting value for FieldView[0].type", "type01", fieldViewValue0.getType());
+
+        FieldView fieldViewValue1 = fieldsValue.get(1);
+        assertNotNull("Not expecting null FieldView[1] value", fieldViewValue1);
+        assertEquals("Unexpecting value for FieldView[1].name", "name02", fieldViewValue1.getName());
+        assertEquals("Unexpecting value for FieldView[1].type", "type02", fieldViewValue1.getType());
     }
 
     private static MetadataContent _metadataContent;

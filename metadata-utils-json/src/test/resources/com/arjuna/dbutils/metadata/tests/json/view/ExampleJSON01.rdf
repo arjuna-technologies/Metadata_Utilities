@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:x="http://rdfs.arjuna.com/json#" xmlns:d="http://rdfs.arjuna.com/description#">
-    <x:Column rdf:about="http://rdf.example.org/JSON_Test#4d3b11c7-7755-453a-8e18-97b4e284ac94">
-        <d:hasTitle>Task</d:hasTitle>
-        <x:hasColumnName>task</x:hasColumnName>
-        <x:hasColumnNumber>0</x:hasColumnNumber>
-    </x:Column>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:j="http://rdfs.arjuna.com/json#" xmlns:d="http://rdfs.arjuna.com/description#">
+    <j:Field rdf:about="http://rdf.example.org/JSON_Test#4d3b11c7-7755-453a-8e18-97b4e284ac94">
+        <d:hasTitle>name01</d:hasTitle>
+        <j:hasFieldName>name01</j:hasFieldName>
+        <j:hasFieldType>type01</j:hasFieldType>
+    </j:Field>
 
-    <x:Column rdf:about="http://rdf.example.org/JSON_Test#41c1678a-1e0f-4772-b99d-c78a13543ee0">
-        <d:hasTitle>Time</d:hasTitle>
-        <x:hasColumnName>time</x:hasColumnName>
-        <x:hasColumnNumber>1</x:hasColumnNumber>
-    </x:Column>
+    <j:Field rdf:about="http://rdf.example.org/JSON_Test#41c1678a-1e0f-4772-b99d-c78a13543ee0">
+        <d:hasTitle>name02</d:hasTitle>
+        <j:hasFieldName>name02</j:hasFieldName>
+        <j:hasFieldType>type02</j:hasFieldType>
+    </j:Field>
 
-    <x:Sheet rdf:about="http://rdf.example.org/JSON_Test#2fbcd7b8-f2d7-4894-b1c4-e2a5e70e9bfa">
-        <d:hasTitle>January</d:hasTitle>
-        <x:hasSheetName>January</x:hasSheetName>
-        <x:hasColumn>
+    <j:Array rdf:about="http://rdf.example.org/JSON_Test#2fbcd7b8-f2d7-4894-b1c4-e2a5e70e9bfa">
+        <j:hasField>
             <rdf:Seq>
                 <rdf:li rdf:resource="http://rdf.example.org/JSON_Test#4d3b11c7-7755-453a-8e18-97b4e284ac94"/>
                 <rdf:li rdf:resource="http://rdf.example.org/JSON_Test#41c1678a-1e0f-4772-b99d-c78a13543ee0"/>
             </rdf:Seq>
-        </x:hasColumn>
-    </x:Sheet>
+        </j:hasField>
+    </j:Array>
 </rdf:RDF>

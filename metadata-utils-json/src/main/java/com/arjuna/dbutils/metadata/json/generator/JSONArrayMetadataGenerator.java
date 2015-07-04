@@ -96,8 +96,24 @@ public class JSONArrayMetadataGenerator
             List<String> fieldIds = new LinkedList<String>();
             for (Object key: jsonObject.keySet())
             {
-                String fieldName = jsonObject.getNames(key)[0];
-                String fieldType = "string";
+                String fieldName = (String) key;
+                String fieldType = "unknown";
+                if (jsonObject.isNull(fieldName))
+                	fieldType = "unknown";
+                else if (jsonObject.optBoolean(fieldName, false) == jsonObject.optBoolean(fieldName, true))
+                	fieldType = "boolean";
+                else if (jsonObject.optInt(fieldName, 0) == jsonObject.optInt(fieldName, 1))
+                	fieldType = "number";
+                else if (jsonObject.optLong(fieldName, 0) == jsonObject.optLong(fieldName, 1))
+                	fieldType = "number";
+                else if (jsonObject.optDouble(fieldName, 0) == jsonObject.optDouble(fieldName, 1))
+                	fieldType = "number";
+                else if (jsonObject.optString(fieldName, "X") == jsonObject.optString(fieldName, "Y"))
+                	fieldType = "string";
+                else if (jsonObject.optJSONArray(fieldName) != null)
+                	fieldType = "array";
+                else if (jsonObject.optJSONObject(fieldName) != null)
+                	fieldType = "object";
 
                 String fieldId = generateJSONFieldMetadata(rdfText, firstItem, baseRDFURI, fieldName, fieldType);
                 if (fieldId != null)

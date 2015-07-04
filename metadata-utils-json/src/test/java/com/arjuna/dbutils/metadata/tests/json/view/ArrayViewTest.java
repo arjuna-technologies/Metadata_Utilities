@@ -41,7 +41,7 @@ public class ArrayViewTest
             MetadataInventory         metadataInventory         = new StoreMetadataInventory(dummyMetadataContentStore);
             Metadata                  metadata                  = metadataInventory.metadata("exampleJSON01").getMetadata();
 
-            _metadataContent = metadata.contents().selector(RDFMetadataContentsSelector.class).withPath("http://rdf.example.org/JSON_Test#TimeSheet").getMetadataContent();
+            _metadataContent = metadata.contents().selector(RDFMetadataContentsSelector.class).withPath("http://rdf.example.org/JSON_Test#2fbcd7b8-f2d7-4894-b1c4-e2a5e70e9bfa").getMetadataContent();
         }
         catch (Throwable throwable)
         {
@@ -55,11 +55,11 @@ public class ArrayViewTest
         assertNotNull("Not expecting null Metadata Content object", _metadataContent);
 
         ArrayView arrayView = _metadataContent.getView(ArrayView.class);
-        assertNotNull("Not expecting null Spreadsheet View object", arrayView);
+        assertNotNull("Not expecting null Array View object", arrayView);
 
         List<FieldView> fieldsValue = arrayView.getFields();
         assertNotNull("Not expecting null FieldView list value", fieldsValue);
-        assertEquals("Unexpecting length of FieldView list value", 1, fieldsValue.size());
+        assertEquals("Unexpecting length of FieldView list value", 2, fieldsValue.size());
     }
 
     private static MetadataContent _metadataContent;
