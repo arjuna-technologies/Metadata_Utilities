@@ -64,9 +64,18 @@ public class JSONArrayMetadataGenerator
 
         try
         {
-            String filename = (String) jsonMap.get("filename");
-            String location = (String) jsonMap.get("location");
-            String metadata = generateJSONArrayMetadata(baseRDFURI, (String) jsonMap.get("data"), filename, location);
+            String metadata = null;
+            Object data     = jsonMap.get("data");
+            if (data != null)
+            {
+                String filename = (String) jsonMap.get("filename");
+                String location = (String) jsonMap.get("location");
+
+                if (data instanceof byte[])
+                    metadata = generateJSONArrayMetadata(baseRDFURI, new String((byte[]) data), filename, location);
+                else if (data instanceof String)
+                    metadata = generateJSONArrayMetadata(baseRDFURI, (String) data, filename, location);
+            }
 
             return metadata;
         }
