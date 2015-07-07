@@ -109,9 +109,9 @@ public class JSONArrayMetadataGenerator
 
             String fieldId = null;
             if (jsonArray != null)
-                fieldId = generateJSONArrayMetadata(rdfText, true, baseRDFURI, jsonArray);
+                fieldId = generateJSONArrayMetadata(rdfText, true, baseRDFURI, "Content", jsonArray);
             else if (jsonObject != null)
-                fieldId = generateJSONObjectMetadata(rdfText, true, baseRDFURI, jsonObject);
+                fieldId = generateJSONObjectMetadata(rdfText, true, baseRDFURI, "Content", jsonObject);
 
             if (fieldId != null)
             {
@@ -131,7 +131,7 @@ public class JSONArrayMetadataGenerator
                     rdfText.append(location);
                     rdfText.append("</d:hasLocation>\n");
                 }
-                rdfText.append("        <j:hasField rdf:resource=\"");
+                rdfText.append("        <j:hasContent rdf:resource=\"");
                 rdfText.append(baseRDFURI.resolve('#' + fieldId.toString()));
                 rdfText.append("\"/>\n");
                 rdfText.append("    </j:Document>");
@@ -152,7 +152,7 @@ public class JSONArrayMetadataGenerator
         }
     }
 
-    private String generateJSONArrayMetadata(StringBuffer rdfText, boolean firstItem, URI baseRDFURI, JSONArray jsonArray)
+    private String generateJSONArrayMetadata(StringBuffer rdfText, boolean firstItem, URI baseRDFURI, String name, JSONArray jsonArray)
     {
         logger.log(Level.FINE, "Generate JSON Array Metadata");
 
@@ -181,9 +181,9 @@ public class JSONArrayMetadataGenerator
                     else if (jsonObject.optString(fieldName, "X") == jsonObject.optString(fieldName, "Y"))
                         fieldId = generateJSONFieldMetadata(rdfText, firstItem, baseRDFURI, fieldName, "string");
                     else if (jsonObject.optJSONArray(fieldName) != null)
-                        fieldId = generateJSONArrayMetadata(rdfText, firstItem, baseRDFURI, jsonObject.optJSONArray(fieldName));
+                        fieldId = generateJSONArrayMetadata(rdfText, firstItem, baseRDFURI, fieldName, jsonObject.optJSONArray(fieldName));
                     else if (jsonObject.optJSONObject(fieldName) != null)
-                        fieldId = generateJSONObjectMetadata(rdfText, firstItem, baseRDFURI, jsonObject.optJSONObject(fieldName));
+                        fieldId = generateJSONObjectMetadata(rdfText, firstItem, baseRDFURI, fieldName, jsonObject.optJSONObject(fieldName));
 
                     if (fieldId != null)
                     {
@@ -201,6 +201,16 @@ public class JSONArrayMetadataGenerator
             rdfText.append("    <j:Array rdf:about=\"");
             rdfText.append(baseRDFURI.resolve('#' + arrayId));
             rdfText.append("\">\n");
+            rdfText.append("        <j:hasName>");
+            rdfText.append(name);
+            rdfText.append("</j:hasName>\n");
+            rdfText.append("        <j:hasType>array</j:hasType>\n");
+            rdfText.append("        <d:hasTitle>");
+            rdfText.append(name);
+            rdfText.append("</d:hasTitle>\n");
+            rdfText.append("        <d:hasSummary>");
+            rdfText.append("JSON type: array");
+            rdfText.append("</d:hasSummary>\n");
             for (String fieldId: fieldIds)
             {
                 rdfText.append("        <j:hasField rdf:resource=\"");
@@ -219,7 +229,7 @@ public class JSONArrayMetadataGenerator
         }
     }
 
-    private String generateJSONObjectMetadata(StringBuffer rdfText, boolean firstItem, URI baseRDFURI, JSONObject jsonObject)
+    private String generateJSONObjectMetadata(StringBuffer rdfText, boolean firstItem, URI baseRDFURI, String name, JSONObject jsonObject)
     {
         logger.log(Level.FINE, "Generate JSON Object Metadata");
 
@@ -243,9 +253,9 @@ public class JSONArrayMetadataGenerator
                 else if (jsonObject.optString(fieldName, "X") == jsonObject.optString(fieldName, "Y"))
                     fieldId = generateJSONFieldMetadata(rdfText, firstItem, baseRDFURI, fieldName, "string");
                 else if (jsonObject.optJSONArray(fieldName) != null)
-                    fieldId = generateJSONArrayMetadata(rdfText, firstItem, baseRDFURI, jsonObject.optJSONArray(fieldName));
+                    fieldId = generateJSONArrayMetadata(rdfText, firstItem, baseRDFURI, fieldName, jsonObject.optJSONArray(fieldName));
                 else if (jsonObject.optJSONObject(fieldName) != null)
-                    fieldId = generateJSONObjectMetadata(rdfText, firstItem, baseRDFURI, jsonObject.optJSONObject(fieldName));
+                    fieldId = generateJSONObjectMetadata(rdfText, firstItem, baseRDFURI, fieldName, jsonObject.optJSONObject(fieldName));
 
                 if (fieldId != null)
                 {
@@ -262,6 +272,16 @@ public class JSONArrayMetadataGenerator
             rdfText.append("    <j:Object rdf:about=\"");
             rdfText.append(baseRDFURI.resolve('#' + objectId));
             rdfText.append("\">\n");
+            rdfText.append("        <j:hasName>");
+            rdfText.append(name);
+            rdfText.append("</j:hasName>\n");
+            rdfText.append("        <j:hasType>object</j:hasType>\n");
+            rdfText.append("        <d:hasTitle>");
+            rdfText.append(name);
+            rdfText.append("</d:hasTitle>\n");
+            rdfText.append("        <d:hasSummary>");
+            rdfText.append("JSON type: object");
+            rdfText.append("</d:hasSummary>\n");
             for (String fieldId: fieldIds)
             {
                 rdfText.append("        <j:hasField rdf:resource=\"");
