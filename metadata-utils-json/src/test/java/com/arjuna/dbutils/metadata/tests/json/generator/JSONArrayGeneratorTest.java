@@ -36,7 +36,7 @@ public class JSONArrayGeneratorTest
 
             JSONArrayMetadataGenerator jsonArrayMetadataGenerator = new JSONArrayMetadataGenerator();
 
-            String rdf = jsonArrayMetadataGenerator.generateJSONArrayMetadata(URI.create("http://rdf.data.org/example_json"), jsonArrayData);
+            String rdf = jsonArrayMetadataGenerator.generateJSONMetadata(URI.create("http://rdf.data.org/example_json"), jsonArrayData);
 
             assertNotNull("Unexpected non null RDF", rdf);
 
