@@ -178,7 +178,7 @@ public class JSONArrayMetadataGenerator
                         fieldId = generateJSONFieldMetadata(rdfText, firstItem, baseRDFURI, fieldName, "number");
                     else if (jsonObject.optDouble(fieldName, 0) == jsonObject.optDouble(fieldName, 1))
                         fieldId = generateJSONFieldMetadata(rdfText, firstItem, baseRDFURI, fieldName, "number");
-                    else if (jsonObject.optString(fieldName, "X") == jsonObject.optString(fieldName, "Y"))
+                    else if (jsonObject.optString(fieldName, "X").equals(jsonObject.optString(fieldName, "Y")))
                         fieldId = generateJSONFieldMetadata(rdfText, firstItem, baseRDFURI, fieldName, "string");
                     else if (jsonObject.optJSONArray(fieldName) != null)
                         fieldId = generateJSONArrayMetadata(rdfText, firstItem, baseRDFURI, fieldName, jsonObject.optJSONArray(fieldName));
@@ -250,7 +250,7 @@ public class JSONArrayMetadataGenerator
                     fieldId = generateJSONFieldMetadata(rdfText, firstItem, baseRDFURI, fieldName, "number");
                 else if (jsonObject.optDouble(fieldName, 0) == jsonObject.optDouble(fieldName, 1))
                     fieldId = generateJSONFieldMetadata(rdfText, firstItem, baseRDFURI, fieldName, "number");
-                else if (jsonObject.optString(fieldName, "X") == jsonObject.optString(fieldName, "Y"))
+                else if (jsonObject.optString(fieldName, "X").equals(jsonObject.optString(fieldName, "Y")))
                     fieldId = generateJSONFieldMetadata(rdfText, firstItem, baseRDFURI, fieldName, "string");
                 else if (jsonObject.optJSONArray(fieldName) != null)
                     fieldId = generateJSONArrayMetadata(rdfText, firstItem, baseRDFURI, fieldName, jsonObject.optJSONArray(fieldName));
