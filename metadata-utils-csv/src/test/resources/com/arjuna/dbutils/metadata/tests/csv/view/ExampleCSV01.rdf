@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:c="http://rdfs.arjuna.com/csv#" xmlns:d="http://rdfs.arjuna.com/description#">
+    <c:Column rdf:about="http://rdf.example.org/CSV_Test#4d3b11c7-7755-453a-8e18-97b4e284ac94">
+        <d:hasTitle>name01</d:hasTitle>
+        <j:hasColumnName>name01</j:hasColumnName>
+        <j:hasColumnType>type01</j:hasColumnType>
+    </j:Column>
+
+    <j:Column rdf:about="http://rdf.example.org/CSV_Test#41c1678a-1e0f-4772-b99d-c78a13543ee0">
+        <d:hasTitle>name02</d:hasTitle>
+        <j:hasColumnName>name02</j:hasColumnName>
+        <j:hasColumnType>type02</j:hasColumnType>
+    </j:Column>
+
+    <j:Table rdf:about="http://rdf.example.org/CSV_Test#2fbcd7b8-f2d7-4894-b1c4-e2a5e70e9bfa">
+        <j:hasColumn>
+            <rdf:Seq>
+                <rdf:li rdf:resource="http://rdf.example.org/CSV_Test#4d3b11c7-7755-453a-8e18-97b4e284ac94"/>
+                <rdf:li rdf:resource="http://rdf.example.org/CSV_Test#41c1678a-1e0f-4772-b99d-c78a13543ee0"/>
+            </rdf:Seq>
+        </j:hasColumn>
+    </j:Table>
+</rdf:RDF>

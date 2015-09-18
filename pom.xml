@@ -39,6 +39,7 @@
         <module>metadata-utils-jdbc</module>
         <module>metadata-utils-xssf</module>
         <module>metadata-utils-json</module>
+        <module>metadata-utils-csv</module>
     </modules>
 
     <repositories>
