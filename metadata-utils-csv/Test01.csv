@@ -1,2 +1,2 @@
-name,Value
-a name,100
+Name,Value,Term & Cond,More < or Less >
+a name,100,text,true

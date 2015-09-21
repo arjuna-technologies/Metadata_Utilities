@@ -5,12 +5,14 @@
 package com.arjuna.dbutils.metadata.csv.generator;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
 public class CSVMetadataGenerator
 {
@@ -83,9 +85,50 @@ public class CSVMetadataGenerator
 
         try
         {
+            List<String> columnNames = extractColumnNames(csv);
+
             StringBuffer rdfText = new StringBuffer();
             rdfText.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n");
-            rdfText.append("<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:rdfs=\"http://www.w3.org/2000/01/rdf-schema#\" xmlns:j=\"http://rdfs.arjuna.com/csv#\" xmlns:d=\"http://rdfs.arjuna.com/description#\">\n");
+            rdfText.append("<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:rdfs=\"http://www.w3.org/2000/01/rdf-schema#\" xmlns:c=\"http://rdfs.arjuna.com/csv#\" xmlns:d=\"http://rdfs.arjuna.com/description#\">\n");
+
+            boolean firstItem = true;
+
+            List<String> columnIds = new LinkedList<String>();
+            for (int columnIndex = 0; columnIndex < columnNames.size(); columnIndex++)
+            {
+                String columnId = generateCSVFieldMetadata(rdfText, firstItem, baseRDFURI, columnNames.get(columnIndex));
+                if (columnId != null)
+                    columnIds.add(columnId);
+                firstItem = firstItem && columnIds.isEmpty();
+            }
+
+            String tableId = UUID.randomUUID().toString();
+            if (! firstItem)
+                rdfText.append('\n');
+            else
+                rdfText.append('\n');
+            rdfText.append("    <c:Table rdf:about=\"");
+            rdfText.append(baseRDFURI.resolve('#' + tableId));
+            rdfText.append("\">\n");
+            if (filename != null)
+            {
+                rdfText.append("        <d:hasTitle>");
+                rdfText.append(escapeHtml4(filename));
+                rdfText.append("</d:hasTitle>\n");
+            }
+            if (location != null)
+            {
+                rdfText.append("        <d:hasLocation>");
+                rdfText.append(escapeHtml4(location));
+                rdfText.append("</d:hasLocation>\n");
+            }
+            for (String columnId: columnIds)
+            {
+                rdfText.append("        <c:hasField rdf:resource=\"");
+                rdfText.append(baseRDFURI.resolve('#' + columnId.toString()));
+                rdfText.append("\"/>\n");
+            }
+            rdfText.append("    </c:Table>\n");
 
             rdfText.append("</rdf:RDF>\n");
 
@@ -102,10 +145,49 @@ public class CSVMetadataGenerator
         }
     }
 
-    private String generateCSVMetadata(StringBuffer rdfText, boolean firstItem, URI baseRDFURI, String name, String csvFirstLine, String csvSecondLine)
+    private String generateCSVFieldMetadata(StringBuffer rdfText, boolean firstItem, URI baseRDFURI, String columnName)
     {
-        logger.log(Level.FINE, "Generate CSV Metadata");
+        if (! firstItem)
+            rdfText.append('\n');
 
-        return null;
+        String columnId  = UUID.randomUUID().toString();
+        rdfText.append("    <c:Column rdf:about=\"");
+        rdfText.append(baseRDFURI.resolve('#' + columnId));
+        rdfText.append("\">\n");
+        if (columnName != null)
+        {
+            rdfText.append("        <d:hasTitle>");
+            rdfText.append(escapeHtml4(columnName));
+            rdfText.append("</d:hasTitle>\n");
+            rdfText.append("        <c:hasColumnName>");
+            rdfText.append(escapeHtml4(columnName));
+            rdfText.append("</c:hasColumnName>\n");
+        }
+        rdfText.append("    </c:Column>\n");
+
+        return columnId;
+    }
+
+    private List<String> extractColumnNames(String csv)
+    {
+        List<String> columnNames = new LinkedList<String>();
+
+        int     lastStart = 0;
+        boolean firstLine = true;
+        for (int index = 0; firstLine && (index < csv.length()); index++)
+        {
+            char character = csv.charAt(index);
+
+            if ((character == ',') || (character == '\n') || (character == '\r'))
+            {
+                columnNames.add(csv.substring(lastStart, index).trim());
+
+                lastStart = index + 1;
+            }
+
+            firstLine = (character != '\n') && (character != '\r');
+        }
+
+        return columnNames;
     }
 }
