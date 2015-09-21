@@ -13,6 +13,6 @@ public interface ColumnView
     @GetMetadataMapping(name="http://rdfs.arjuna.com/csv#hasColumnName", type="http://www.w3.org/2001/XMLSchema#string")
     public String getName();
 
-    @GetMetadataMapping(name="http://rdfs.arjuna.com/cvs#hasColumnType", type="http://www.w3.org/2001/XMLSchema#string")
+    @GetMetadataMapping(name="http://rdfs.arjuna.com/csv#hasColumnType", type="http://www.w3.org/2001/XMLSchema#string")
     public String getType();
 }
