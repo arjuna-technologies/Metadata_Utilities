@@ -5,14 +5,13 @@
 package com.arjuna.dbutils.metadata.csv.generator;
 
 import java.net.URI;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
+import static org.apache.commons.lang3.StringEscapeUtils.escapeXml10;
 
 public class CSVMetadataGenerator
 {
@@ -113,13 +112,13 @@ public class CSVMetadataGenerator
             if (filename != null)
             {
                 rdfText.append("        <d:hasTitle>");
-                rdfText.append(escapeHtml4(filename));
+                rdfText.append(escapeXml10(filename));
                 rdfText.append("</d:hasTitle>\n");
             }
             if (location != null)
             {
                 rdfText.append("        <d:hasLocation>");
-                rdfText.append(escapeHtml4(location));
+                rdfText.append(escapeXml10(location));
                 rdfText.append("</d:hasLocation>\n");
             }
             for (String columnId: columnIds)
@@ -157,10 +156,10 @@ public class CSVMetadataGenerator
         if (columnName != null)
         {
             rdfText.append("        <d:hasTitle>");
-            rdfText.append(escapeHtml4(columnName));
+            rdfText.append(escapeXml10(columnName));
             rdfText.append("</d:hasTitle>\n");
             rdfText.append("        <c:hasColumnName>");
-            rdfText.append(escapeHtml4(columnName));
+            rdfText.append(escapeXml10(columnName));
             rdfText.append("</c:hasColumnName>\n");
         }
         rdfText.append("    </c:Column>\n");

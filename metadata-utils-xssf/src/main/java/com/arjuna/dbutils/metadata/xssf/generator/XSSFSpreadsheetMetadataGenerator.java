@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.apache.poi.POIXMLProperties;
 import org.apache.poi.POIXMLProperties.CoreProperties;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -23,6 +22,7 @@ import org.apache.poi.xssf.usermodel.XSSFComment;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import static org.apache.commons.lang3.StringEscapeUtils.escapeXml10;
 
 public class XSSFSpreadsheetMetadataGenerator
 {
@@ -152,33 +152,33 @@ public class XSSFSpreadsheetMetadataGenerator
             {
                 rdfText.append("        <d:hasTitle>");
                 if ((title != null) && (! "".equals(title.trim())))
-                    rdfText.append(title);
+                    rdfText.append(escapeXml10(title));
                 else
-                    rdfText.append(filename);
+                    rdfText.append(escapeXml10(filename));
                 rdfText.append("</d:hasTitle>\n");
             }
             if ((summary != null) || (filename != null))
             {
                 rdfText.append("        <d:hasSummary>");
                 if ((summary != null) && (! "".equals(summary.trim())))
-                    rdfText.append(summary);
+                    rdfText.append(escapeXml10(summary));
                 else
                 {
                     rdfText.append("This information was generated, automatically, from the spreadsheet ");
-                    rdfText.append(filename);
+                    rdfText.append(escapeXml10(filename));
                 }
                 rdfText.append("</d:hasSummary>\n");
             }
             if ((details != null) && (! "".equals(details.trim())))
             {
                 rdfText.append("        <d:hasDetails>");
-                rdfText.append(details);
+                rdfText.append(escapeXml10(details));
                 rdfText.append("</d:hasDetails>\n");
             }
             if ((owner != null) && (! "".equals(owner.trim())))
             {
                 rdfText.append("        <d:hasOwner>");
-                rdfText.append(owner);
+                rdfText.append(escapeXml10(owner));
                 rdfText.append("</d:hasOwner>\n");
             }
             if ((tags != null) && (! "".equals(tags.trim())))
@@ -186,14 +186,14 @@ public class XSSFSpreadsheetMetadataGenerator
                 for (String tag: tags.split(","))
                 {
                     rdfText.append("        <d:hasTag>");
-                    rdfText.append(tag.trim());
+                    rdfText.append(escapeXml10(tag.trim()));
                     rdfText.append("</d:hasTag>\n");
                 }
             }
             if (location != null)
             {
                 rdfText.append("        <d:hasLocation>");
-                rdfText.append(location);
+                rdfText.append(escapeXml10(location));
                 rdfText.append("</d:hasLocation>\n");
             }
             for (String sheetId: sheetIds)
@@ -243,7 +243,7 @@ public class XSSFSpreadsheetMetadataGenerator
         if (sheetName != null)
         {
             rdfText.append("        <d:hasTitle>");
-            rdfText.append(sheetName);
+            rdfText.append(escapeXml10(sheetName));
             rdfText.append("</d:hasTitle>\n");
         }
         for (String columnId: columnIds)
@@ -287,7 +287,7 @@ public class XSSFSpreadsheetMetadataGenerator
             rdfText.append(baseRDFURI.resolve('#' + columnId));
             rdfText.append("\">\n");
             rdfText.append("        <x:hasLabel>");
-            rdfText.append(columnLabel);
+            rdfText.append(escapeXml10(columnLabel));
             rdfText.append("</x:hasLabel>\n");
             rdfText.append("        <x:hasIndex>");
             rdfText.append(columnIndex);
@@ -295,19 +295,19 @@ public class XSSFSpreadsheetMetadataGenerator
             if (columnType != null)
             {
                 rdfText.append("        <x:hasType>");
-                rdfText.append(columnType);
+                rdfText.append(escapeXml10(columnType));
                 rdfText.append("</x:hasType>\n");
             }
             if (columnName != null)
             {
                 rdfText.append("        <d:hasTitle>");
-                rdfText.append(columnName);
+                rdfText.append(escapeXml10(columnName));
                 rdfText.append("</d:hasTitle>\n");
             }
             if (columnComment != null)
             {
                 rdfText.append("        <d:hasSummary>");
-                rdfText.append(columnComment);
+                rdfText.append(escapeXml10(columnComment));
                 rdfText.append("</d:hasSummary>\n");
             }
             rdfText.append("    </x:Column>\n");
