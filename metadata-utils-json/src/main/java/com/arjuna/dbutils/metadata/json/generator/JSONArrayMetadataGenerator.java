@@ -168,7 +168,9 @@ public class JSONArrayMetadataGenerator
                 {
                     String fieldId   = null;
                     String fieldName = (String) key;
-                    if (jsonObject.isNull(fieldName))
+                    if ((fieldName == null) || fieldName.indexOf(" ") != -1)
+                        fieldId = null;
+                    else if (jsonObject.isNull(fieldName))
                         fieldId = generateJSONFieldMetadata(rdfText, firstItem, baseRDFURI, fieldName, "unknown");
                     else if (jsonObject.optBoolean(fieldName, false) == jsonObject.optBoolean(fieldName, true))
                         fieldId = generateJSONFieldMetadata(rdfText, firstItem, baseRDFURI, fieldName, "boolean");
@@ -240,7 +242,9 @@ public class JSONArrayMetadataGenerator
             {
                 String fieldId   = null;
                 String fieldName = (String) key;
-                if (jsonObject.isNull(fieldName))
+                if ((fieldName == null) || fieldName.indexOf(" ") != -1)
+                    fieldId = null;
+                else if (jsonObject.isNull(fieldName))
                     fieldId = generateJSONFieldMetadata(rdfText, firstItem, baseRDFURI, fieldName, "unknown");
                 else if (jsonObject.optBoolean(fieldName, false) == jsonObject.optBoolean(fieldName, true))
                     fieldId = generateJSONFieldMetadata(rdfText, firstItem, baseRDFURI, fieldName, "boolean");
